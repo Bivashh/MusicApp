@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Teacher Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+<!-- NAVBAR -->
+<nav class="bg-emerald-600 text-white px-6 py-4 flex justify-between items-center shadow">
+    <h2 class="text-xl font-bold">Teacher Dashboard</h2>
+    <a href="/login/" class="bg-white text-emerald-600 px-4 py-1 rounded hover:bg-gray-100">
+        Logout
+    </a>
+</nav>
+
+<!-- MAIN -->
+<div class="max-w-4xl mx-auto mt-10 px-4">
+
+    <!-- CREATE CLASS BUTTON -->
+    <div class="mb-8 text-right">
+        <a href="/teacher/create-class/"
+           class="bg-emerald-600 text-white px-6 py-2 rounded-lg shadow hover:bg-emerald-700 transition">
+            ➕ Create Class Schedule
+        </a>
+    </div>
+
+    <!-- CLASS LIST -->
+    <h3 class="text-lg font-semibold mb-4">Your Classes</h3>
+
+    {% if classes %}
+        <div class="grid gap-4">
+            {% for c in classes %}
+                <div class="bg-white p-4 rounded-lg shadow flex justify-between items-center">
+                    <div>
+                        <p class="font-semibold text-gray-800">{{ c.class_name }}</p>
+                        <p class="text-sm text-gray-600">
+                            {{ c.date }} | {{ c.start_time }} - {{ c.end_time }}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="bg-white p-6 rounded-lg shadow text-center text-gray-500">
+            No classes yet.
+        </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

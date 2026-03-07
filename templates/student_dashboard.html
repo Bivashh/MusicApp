@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-green-100 to-emerald-200 min-h-screen">
+
+<div class="max-w-5xl mx-auto py-10 px-4">
+
+  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
+    Student Dashboard
+  </h2>
+
+  <div class="flex flex-wrap gap-3 justify-center mb-8">
+  <a href="/student/profile/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">My Profile</a>
+  <a href="/student/my-classes/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">My Classes</a>
+  <a href="/student/assessments/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">Assessments</a>
+  <a href="/student/results/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">Results</a>
+  <a href="{% url 'student_payment' %}" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">Payments</a>
+</div>
+
+  <h3 class="text-xl font-semibold mb-4 text-gray-700">
+    Available Classes
+  </h3>
+
+  <div class="grid md:grid-cols-2 gap-6">
+
+    {% for c in classes %}
+      <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+
+        <h4 class="text-lg font-bold text-indigo-600 mb-2">
+          {{ c.class_name }}
+        </h4>
+
+        <p class="text-gray-700">
+          <span class="font-semibold">Teacher:</span>
+          {{ c.teacher.full_name }}
+        </p>
+
+        <p class="text-gray-700">
+          <span class="font-semibold">Date:</span>
+          {{ c.date }}
+        </p>
+
+        <p class="text-gray-700">
+          <span class="font-semibold">Time:</span>
+          {{ c.start_time }} - {{ c.end_time }}
+        </p>
+
+      </div>
+
+    {% empty %}
+      <p class="text-center text-gray-600 col-span-full">
+        No classes available.
+      </p>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+</body>
+</html>

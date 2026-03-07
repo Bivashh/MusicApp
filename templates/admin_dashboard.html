@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+<div class="max-w-6xl mx-auto py-10 px-4">
+
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-3xl font-bold text-gray-800">Admin Dashboard</h2>
+    <div class="flex gap-3">
+      <a href="/panel/students/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">Students</a>
+      <a href="/panel/teachers/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">Teachers</a>
+      <a href="/panel/payments/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">Payments</a>
+      <a href="/panel/logout/" class="px-4 py-2 bg-red-600 text-white rounded-xl hover:bg-red-700 font-semibold">Logout</a>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-5 gap-4 mb-8">
+    <div class="bg-white p-5 rounded-2xl shadow">
+      <p class="text-gray-500 font-semibold">Total Students</p>
+      <p class="text-3xl font-bold">{{ total_students }}</p>
+    </div>
+    <div class="bg-white p-5 rounded-2xl shadow">
+      <p class="text-gray-500 font-semibold">Total Teachers</p>
+      <p class="text-3xl font-bold">{{ total_teachers }}</p>
+    </div>
+    <div class="bg-white p-5 rounded-2xl shadow">
+      <p class="text-gray-500 font-semibold">Payments</p>
+      <p class="text-3xl font-bold">{{ total_payments }}</p>
+    </div>
+    <div class="bg-white p-5 rounded-2xl shadow">
+      <p class="text-gray-500 font-semibold">Paid</p>
+      <p class="text-3xl font-bold text-emerald-600">{{ paid_payments }}</p>
+    </div>
+    <div class="bg-white p-5 rounded-2xl shadow">
+      <p class="text-gray-500 font-semibold">Pending</p>
+      <p class="text-3xl font-bold text-yellow-600">{{ pending_payments }}</p>
+    </div>
+  </div>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h3 class="text-xl font-bold mb-4">Recent Students</h3>
+      <ul class="space-y-2">
+        {% for s in students %}
+          <li class="flex justify-between border-b pb-2">
+            <span class="font-semibold">{{ s.full_name }}</span>
+            <span class="text-gray-500 text-sm">{{ s.email }}</span>
+          </li>
+        {% empty %}
+          <li class="text-gray-500">No students found.</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="bg-white p-6 rounded-2xl shadow">
+      <h3 class="text-xl font-bold mb-4">Recent Paid Payments</h3>
+      <ul class="space-y-2">
+        {% for p in recent_paid %}
+          <li class="flex justify-between border-b pb-2">
+            <span class="font-semibold">{{ p.student.full_name }}</span>
+            <span class="text-emerald-700 font-semibold">Rs. {{ p.amount }} ({{ p.month }})</span>
+          </li>
+        {% empty %}
+          <li class="text-gray-500">No paid payments yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

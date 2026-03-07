@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Students</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+<div class="max-w-6xl mx-auto py-10 px-4">
+
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-3xl font-bold text-gray-800">Students</h2>
+    <a href="/admin/dashboard/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">← Back</a>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow p-6">
+    <table class="w-full">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-3">ID</th>
+          <th class="py-3">Name</th>
+          <th class="py-3">Email</th>
+          <th class="py-3">Phone</th>
+          <th class="py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in students %}
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-4">{{ s.student_id }}</td>
+          <td class="py-4 font-semibold">{{ s.full_name }}</td>
+          <td class="py-4">{{ s.email }}</td>
+          <td class="py-4">{{ s.phone }}</td>
+          <td class="py-4">
+            <a href="/admin/student/delete/{{ s.student_id }}/"
+               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+              Delete
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td class="py-6 text-center text-gray-500" colspan="5">No students found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

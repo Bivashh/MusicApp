@@ -1,0 +1,329 @@
+from django.shortcuts import render,redirect
+from django.contrib.auth import authenticate,login,logout
+from django.contrib import messages
+from .models import Student, Teacher, ClassSchedule, Payment
+import bcrypt
+import requests
+from django.conf import settings
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponse
+from django.conf import settings
+
+def admin_login(request):
+    if request.method == "POST":
+        username = request.POST.get("username")
+        password = request.POST.get("password")
+
+        if username == settings.ADMIN_USERNAME and password == settings.ADMIN_PASSWORD:
+            request.session["role"] = "admin"
+            request.session["admin"] = True
+            return redirect("/panel/dashboard/")
+        return render(request, "admin_login.html", {"error": "Invalid admin credentials"})
+
+    return render(request, "admin_login.html")
+
+
+def admin_required(view_func):
+    def wrapper(request, *args, **kwargs):
+        if request.session.get("role") != "admin":
+            return redirect("/panel/login/")
+        return view_func(request, *args, **kwargs)
+    return wrapper
+
+
+@admin_required
+def admin_dashboard(request):
+    total_students = Student.objects.count()
+    total_teachers = Teacher.objects.count()
+    total_payments = Payment.objects.count()
+    paid_payments = Payment.objects.filter(status="PAID").count()
+    pending_payments = Payment.objects.filter(status="PENDING").count()
+
+    students = Student.objects.all().order_by("-student_id")[:10]
+    teachers = Teacher.objects.all().order_by("-teacher_id")[:10]
+    recent_paid = Payment.objects.filter(status="PAID").order_by("-updated_at")[:10]
+
+    return render(request, "admin_dashboard.html", {
+        "total_students": total_students,
+        "total_teachers": total_teachers,
+        "total_payments": total_payments,
+        "paid_payments": paid_payments,
+        "pending_payments": pending_payments,
+        "students": students,
+        "teachers": teachers,
+        "recent_paid": recent_paid,
+    })
+
+
+@admin_required
+def admin_students(request):
+    students = Student.objects.all().order_by("-student_id")
+    return render(request, "admin_students.html", {"students": students})
+
+
+@admin_required
+def admin_teachers(request):
+    teachers = Teacher.objects.all().order_by("-teacher_id")
+    return render(request, "admin_teachers.html", {"teachers": teachers})
+
+
+@admin_required
+def admin_payments(request):
+    payments = Payment.objects.all().order_by("-updated_at")
+    return render(request, "admin_payments.html", {"payments": payments})
+
+
+@admin_required
+def admin_delete_student(request, student_id):
+    s = get_object_or_404(Student, student_id=student_id)
+    s.delete()
+    return redirect("/panel/students/")
+
+
+@admin_required
+def admin_delete_teacher(request, teacher_id):
+    t = get_object_or_404(Teacher, teacher_id=teacher_id)
+    t.delete()
+    return redirect("/panel/teachers/")
+
+
+def admin_logout(request):
+    request.session.flush()
+    return redirect("/panel/login/")
+
+
+def student_register(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        password = request.POST['password']
+
+        if Student.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect('student_register')
+
+        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+        Student.objects.create(
+            full_name=name,
+            email=email,
+            phone=phone,
+            password=hashed,
+            is_verified=True   
+        )
+
+        messages.success(request, "Student registered successfully")
+        return redirect('login')
+
+    return render(request, 'student_register.html')
+
+
+def teacher_register(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        password = request.POST['password']
+
+        if Teacher.objects.filter(email=email).exists():
+            messages.error(request, "Email already registered")
+            return redirect('teacher_register')
+
+        hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+
+        Teacher.objects.create(
+            full_name=name,
+            email=email,
+            phone=phone,
+            password=hashed,
+            is_verified=True
+        )
+
+        messages.success(request, "Teacher registered successfully")
+        return redirect('login')
+
+    return render(request, 'teacher_register.html')
+
+def loginPage(request):
+    if request.method == 'POST':
+        email = request.POST['email']
+        password = request.POST['password']
+
+        # check student
+        try:
+            student = Student.objects.get(email=email)
+            if bcrypt.checkpw(password.encode(), student.password.encode()):
+                request.session['user_id'] = student.student_id
+                request.session['role'] = 'student'
+                return redirect('student_dashboard')
+        except:
+            pass
+
+        # check teacher
+        try:
+            teacher = Teacher.objects.get(email=email)
+            if bcrypt.checkpw(password.encode(), teacher.password.encode()):
+                request.session['user_id'] = teacher.teacher_id
+                request.session['role'] = 'teacher'
+                return redirect('teacher_dashboard')
+        except:
+            pass
+
+        messages.error(request, "Invalid credentials")
+
+    return render(request, 'login.html')
+
+def student_dashboard(request):
+    classes= ClassSchedule.objects.all()
+    return render(request, 'student_dashboard.html',{'classes':classes})
+
+def teacher_dashboard(request):
+    return render(request, 'teacher_dashboard.html')
+
+def student_profile(request):
+    return render(request, "student_profile.html")
+
+def student_payment(request):
+    return render(request, 'student_payments.html')
+
+def create_class(request):
+    if request.method == 'POST':
+        class_name = request.POST['class_name']
+        date = request.POST['date']
+        start = request.POST['start_time']
+        end = request.POST['end_time']
+
+        teacher_id = request.session.get('user_id')
+        teacher = Teacher.objects.get(teacher_id=teacher_id)
+
+        ClassSchedule.objects.create(
+            teacher=teacher,
+            class_name=class_name,
+            date=date,
+            start_time=start,
+            end_time=end
+        )
+
+        return redirect('teacher_dashboard')
+
+    return render(request, 'create_class.html')
+
+def student_payment(request):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")  # should be student_id
+    student = get_object_or_404(Student, student_id=sid)
+
+    payments = Payment.objects.filter(student=student).order_by("-created_at")
+    return render(request, "student_payments.html", {"payments": payments})
+
+
+def student_payment_new(request):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    classes = ClassSchedule.objects.all().order_by("-date")
+
+    if request.method == "POST":
+        schedule_id = request.POST.get("schedule_id")
+        month = request.POST.get("month")
+        amount = request.POST.get("amount")
+
+        cls = get_object_or_404(ClassSchedule, schedule_id=schedule_id)
+
+        p = Payment.objects.create(
+            student=student,
+            class_schedule=cls,
+            month=month,
+            amount=amount,
+            status="INITIATED",
+        )
+
+        return redirect(f"/khalti/initiate/{p.payment_id}/")
+
+    return render(request, "student_payment_create.html", {"classes": classes})
+
+
+def khalti_initiate(request, payment_id):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    payment = get_object_or_404(Payment, payment_id=payment_id)
+
+    sid = request.session.get("user_id")
+    if payment.student.student_id != sid:
+        return redirect("/student/payments/")
+
+    payment.amount_paisa = int(float(payment.amount) * 100)
+    payment.status = "INITIATED"
+    payment.save()
+
+    url = f"{settings.KHALTI_BASE_URL}/epayment/initiate/"
+    headers = {
+        "Authorization": f"Key {settings.KHALTI_SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    payload = {
+        "return_url": f"{settings.WEBSITE_URL}/khalti/return/",
+        "website_url": settings.WEBSITE_URL,
+        "amount": payment.amount_paisa,
+        "purchase_order_id": str(payment.purchase_order_id),
+        "purchase_order_name": payment.purchase_order_name,
+        "customer_info": {
+            "name": payment.student.full_name,
+            "email": payment.student.email,
+            "phone": payment.student.phone,
+        },
+    }
+
+    res = requests.post(url, json=payload, headers=headers, timeout=30)
+    if res.status_code != 200:
+        return HttpResponse(f"Khalti initiate failed: {res.status_code} {res.text}")
+
+    data = res.json()
+    payment.pidx = data.get("pidx")
+    payment.save()
+
+    return redirect(data.get("payment_url"))
+
+
+def khalti_return(request):
+    pidx = request.GET.get("pidx")
+    if not pidx:
+        return HttpResponse("Missing pidx.")
+
+    payment = get_object_or_404(Payment, pidx=pidx)
+
+    lookup_url = f"{settings.KHALTI_BASE_URL}/epayment/lookup/"
+    headers = {
+        "Authorization": f"Key {settings.KHALTI_SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    res = requests.post(lookup_url, json={"pidx": pidx}, headers=headers, timeout=30)
+    if res.status_code != 200:
+        payment.status = "PENDING"
+        payment.save()
+        return HttpResponse(f"Khalti lookup failed: {res.status_code} {res.text}")
+
+    info = res.json()
+    final_status = info.get("status")
+    payment.khalti_transaction_id = info.get("transaction_id")
+
+    if final_status == "Completed":
+        payment.status = "PAID"
+    elif final_status == "Pending":
+        payment.status = "PENDING"
+    elif final_status == "User canceled":
+        payment.status = "CANCELED"
+    else:
+        payment.status = "FAILED"
+
+    payment.save()
+    return redirect("/student/payments/")

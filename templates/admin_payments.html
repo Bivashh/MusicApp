@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Payments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+<div class="max-w-6xl mx-auto py-10 px-4">
+
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-3xl font-bold text-gray-800">Payments</h2>
+    <a href="/admin/dashboard/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">← Back</a>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow p-6">
+    <table class="w-full">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-3">Student</th>
+          <th class="py-3">Class</th>
+          <th class="py-3">Month</th>
+          <th class="py-3">Amount</th>
+          <th class="py-3">Status</th>
+          <th class="py-3">Txn</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in payments %}
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-4 font-semibold">{{ p.student.full_name }}</td>
+          <td class="py-4">{{ p.class_schedule.class_name }}</td>
+          <td class="py-4">{{ p.month }}</td>
+          <td class="py-4">Rs. {{ p.amount }}</td>
+          <td class="py-4">
+            {% if p.status == "PAID" %}
+              <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold">PAID</span>
+            {% elif p.status == "PENDING" %}
+              <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-semibold">PENDING</span>
+            {% else %}
+              <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full font-semibold">{{ p.status }}</span>
+            {% endif %}
+          </td>
+          <td class="py-4 text-gray-500">{{ p.khalti_transaction_id|default:"-" }}</td>
+        </tr>
+        {% empty %}
+        <tr><td class="py-6 text-center text-gray-500" colspan="6">No payments found.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>

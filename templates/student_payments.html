@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Payments</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-green-100 to-emerald-200 min-h-screen">
+
+<div class="max-w-5xl mx-auto py-10 px-4">
+
+  <!-- Header -->
+  <div class="flex items-center justify-between mb-8">
+    <h2 class="text-3xl font-bold text-gray-800">Payments</h2>
+
+    <div class="flex gap-3">
+      <a href="/student/payments/new/"
+         class="px-5 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold">
+        + Make Payment
+      </a>
+
+      <a href="/student/dashboard/"
+         class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">
+        ← Back
+      </a>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-2xl shadow-lg p-6">
+    <table class="w-full">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-3">Class</th>
+          <th class="py-3">Month</th>
+          <th class="py-3">Amount</th>
+          <th class="py-3">Status</th>
+          <th class="py-3">Action</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for p in payments %}
+        <tr class="border-b hover:bg-gray-50 transition">
+          <td class="py-4 font-semibold text-indigo-700">
+            {{ p.class_schedule.class_name }}
+          </td>
+
+          <td class="py-4">{{ p.month }}</td>
+
+          <td class="py-4">Rs. {{ p.amount }}</td>
+
+          <td class="py-4">
+            {% if p.status == "PAID" %}
+              <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold">
+                PAID
+              </span>
+            {% elif p.status == "PENDING" or p.status == "INITIATED" %}
+              <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-semibold">
+                {{ p.status }}
+              </span>
+            {% elif p.status == "CANCELED" %}
+              <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full font-semibold">
+                CANCELED
+              </span>
+            {% else %}
+              <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full font-semibold">
+                {{ p.status }}
+              </span>
+            {% endif %}
+          </td>
+
+          <td class="py-4">
+            {% if p.status != "PAID" %}
+              <a href="/khalti/initiate/{{ p.payment_id }}/"
+                 class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                Pay with Khalti
+              </a>
+            {% else %}
+              <span class="text-gray-400">-</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="py-8 text-center text-gray-500">
+            No payments found. Click <b>“Make Payment”</b> to create one.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p class="text-sm text-gray-500 mt-4">
+      *This page is connected to the database. Unpaid payments can be paid via Khalti.
+    </p>
+  </div>
+
+</div>
+
+</body>
+</html>
