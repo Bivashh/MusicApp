@@ -9,6 +9,10 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.conf import settings
 
+
+def home(request):
+    return render(request, "home.html")
+
 def admin_login(request):
     if request.method == "POST":
         username = request.POST.get("username")

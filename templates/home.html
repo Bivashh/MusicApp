@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Narajyoti Music School</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html { scroll-behavior: smooth; }
+    * { scroll-margin-top: 92px; }
+    .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
+    .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.04); }
+    .faq-answer { transition: max-height 0.35s ease, opacity 0.2s ease; }
+  </style>
+</head>
+
+<body class="bg-stone-50 text-stone-800 font-sans antialiased">
+
+<!-- NAVBAR -->
+<nav class="fixed top-0 w-full bg-white/85 backdrop-blur border-b border-stone-200/80 z-50">
+  <div class="max-w-6xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between">
+    <a href="#home" class="flex items-center gap-3">
+      <div class="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center">
+        <span class="text-xl">🎵</span>
+      </div>
+      <div class="leading-tight">
+        <div class="text-lg font-extrabold tracking-tight text-amber-900">Narajyoti</div>
+        <div class="text-xs font-semibold text-stone-500 -mt-0.5">Music School</div>
+      </div>
+    </a>
+
+    <!-- Desktop -->
+    <div class="hidden md:flex items-center gap-8 text-stone-600 font-medium">
+      <a href="#about" class="hover:text-amber-700">About</a>
+      <a href="#courses" class="hover:text-amber-700">Courses</a>
+      <a href="#system" class="hover:text-amber-700">System</a>
+      <a href="#faq" class="hover:text-amber-700">FAQ</a>
+      <a href="#contact" class="hover:text-amber-700">Contact</a>
+    </div>
+
+    <div class="hidden md:flex items-center gap-2">
+      <a href="/panel/login/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-white transition">
+        Admin Login
+      </a>
+      <a href="#access" class="px-5 py-2 rounded-full bg-amber-800 text-white hover:bg-amber-900 transition shadow-sm font-semibold">
+        Student/Teacher Portal
+      </a>
+    </div>
+
+    <!-- Mobile -->
+    <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-stone-100" aria-label="menu">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-7 h-7 text-stone-700">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
+      </svg>
+    </button>
+  </div>
+
+  <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-stone-200 px-5 py-4 shadow-lg">
+    <div class="flex flex-col gap-3 text-base font-medium text-stone-700">
+      <a href="#about" class="py-2 hover:text-amber-700" onclick="toggleMobile()">About</a>
+      <a href="#courses" class="py-2 hover:text-amber-700" onclick="toggleMobile()">Courses</a>
+      <a href="#system" class="py-2 hover:text-amber-700" onclick="toggleMobile()">System</a>
+      <a href="#faq" class="py-2 hover:text-amber-700" onclick="toggleMobile()">FAQ</a>
+      <a href="#contact" class="py-2 hover:text-amber-700" onclick="toggleMobile()">Contact</a>
+
+      <div class="pt-2 flex flex-col gap-3">
+        <a href="/panel/login/" class="py-2 rounded-full border border-stone-300 text-center hover:border-amber-500 hover:bg-stone-50" onclick="toggleMobile()">
+          Admin Login
+        </a>
+        <a href="#access" class="py-2 rounded-full bg-amber-800 text-white text-center hover:bg-amber-900 font-semibold" onclick="toggleMobile()">
+          Student/Teacher Portal
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="pt-28 md:pt-32">
+
+  <!-- HERO -->
+  <section id="home" class="max-w-6xl mx-auto px-5 md:px-8">
+    <div class="grid md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-6 text-center md:text-left">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-800 font-semibold text-sm">
+          🎶 Learn • Practice • Perform
+        </span>
+
+        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-stone-900">
+          Build confidence in music,
+          <span class="text-amber-800">one lesson at a time.</span>
+        </h1>
+
+        <p class="text-lg md:text-xl text-stone-600 max-w-xl mx-auto md:mx-0">
+          Welcome to Narajyoti Music School — a supportive place for vocals and instruments.
+          Our system helps students and teachers stay organized with schedules, fees, and progress.
+        </p>
+
+        <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
+          <a href="#courses" class="bg-amber-800 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-amber-900 shadow-md w-full sm:w-auto text-center">
+            Explore Courses →
+          </a>
+          <a href="#access" class="px-8 py-4 rounded-full text-lg font-semibold border border-stone-300 hover:border-amber-500 hover:bg-white w-full sm:w-auto text-center">
+            Student / Teacher Portal
+          </a>
+        </div>
+
+        <div class="grid grid-cols-3 gap-3 pt-4 max-w-md mx-auto md:mx-0">
+          <div class="p-4 rounded-2xl bg-white border border-stone-200 shadow-sm">
+            <p class="text-2xl font-extrabold text-stone-900">Vocals</p>
+            <p class="text-sm text-stone-500">Training</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-stone-200 shadow-sm">
+            <p class="text-2xl font-extrabold text-stone-900">Guitar</p>
+            <p class="text-sm text-stone-500">Basics+</p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white border border-stone-200 shadow-sm">
+            <p class="text-2xl font-extrabold text-stone-900">Keyboard</p>
+            <p class="text-sm text-stone-500">Practice</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-center">
+        <div class="relative w-full max-w-md aspect-square rounded-3xl border border-stone-200 bg-gradient-to-br from-amber-100 via-stone-100 to-white shadow-xl flex items-center justify-center">
+          <div class="absolute top-6 left-6 text-stone-500 font-semibold text-sm bg-white/70 backdrop-blur px-3 py-1 rounded-full border border-stone-200">
+            Narajyoti Music School
+          </div>
+          <div class="text-7xl md:text-8xl">🎼🎹</div>
+          <div class="absolute bottom-6 right-6 text-stone-600 text-sm bg-white/70 backdrop-blur px-3 py-1 rounded-full border border-stone-200">
+            Schedules • Fees • Progress
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section id="about" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
+    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-stone-200">
+      <div class="grid md:grid-cols-2 gap-10 items-start">
+        <div>
+          <span class="text-amber-700 font-semibold">About Us</span>
+          <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-stone-900">
+            A place to learn music with guidance and discipline.
+          </h2>
+          <p class="text-stone-600 text-lg leading-relaxed mt-4">
+            Narajyoti Music School focuses on steady improvement — technique, rhythm, confidence, and performance readiness.
+            We create a supportive environment where students enjoy learning while progressing consistently.
+          </p>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
+            <div class="text-3xl">✅</div>
+            <h3 class="text-xl font-bold mt-3">Structured Learning</h3>
+            <p class="text-stone-600 mt-2">Clear lesson plans and practice routines.</p>
+          </div>
+          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
+            <div class="text-3xl">🎤</div>
+            <h3 class="text-xl font-bold mt-3">Performance Focus</h3>
+            <p class="text-stone-600 mt-2">Build confidence to sing and play in front of others.</p>
+          </div>
+          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
+            <div class="text-3xl">🧠</div>
+            <h3 class="text-xl font-bold mt-3">Helpful Feedback</h3>
+            <p class="text-stone-600 mt-2">Guidance to improve pitch, rhythm, and technique.</p>
+          </div>
+          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
+            <div class="text-3xl">🤝</div>
+            <h3 class="text-xl font-bold mt-3">Supportive Environment</h3>
+            <p class="text-stone-600 mt-2">Friendly teaching with consistent encouragement.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- COURSES -->
+  <section id="courses" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900">Courses</h2>
+      <p class="text-stone-500 text-lg mt-3">Choose a path and grow your skills step by step.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">🎤</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Vocal Training</h3>
+        <p class="text-stone-600">Breath control, pitch accuracy, tone improvement, and performance confidence.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">🎸</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Guitar</h3>
+        <p class="text-stone-600">Chords, strumming patterns, rhythm control, and song practice.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">🎹</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Keyboard / Harmonium</h3>
+        <p class="text-stone-600">Notes, scales, accompaniment, and foundational music theory.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">🥁</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Rhythm Practice</h3>
+        <p class="text-stone-600">Timing, claps, counts, and rhythm exercises to strengthen musical accuracy.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">🎶</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Song Coaching</h3>
+        <p class="text-stone-600">Improve expression, confidence, and song performance for stage readiness.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">📚</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Beginner Foundation</h3>
+        <p class="text-stone-600">Perfect for beginners: basics, posture, practice habits, and improvement tracking.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SYSTEM / FEATURES -->
+  <section id="system" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900">Student & Teacher Portal</h2>
+      <p class="text-stone-500 text-lg mt-3">A simple portal to keep learning organized.</p>
+    </div>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">📅</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Class Schedules</h3>
+        <p class="text-stone-600">Teachers create schedules; students can view what’s available.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">💳</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Fees & Payments</h3>
+        <p class="text-stone-600">Track monthly fees with clear paid/pending status.</p>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
+        <span class="text-4xl">🧪</span>
+        <h3 class="text-2xl font-bold mt-4 mb-2">Assessments</h3>
+        <p class="text-stone-600">Students submit practice recordings and receive feedback (in progress).</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ACCESS -->
+  <section id="access" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
+    <div class="bg-gradient-to-br from-amber-900 to-amber-800 text-white p-10 md:p-12 rounded-[2.5rem] shadow-2xl">
+      <div class="grid md:grid-cols-2 gap-10 items-center">
+        <div>
+          <h2 class="text-3xl md:text-4xl font-extrabold">Access the Portal</h2>
+          <p class="text-amber-100 text-lg mt-3">
+            Register or login to manage classes, payments, and progress.
+          </p>
+          <div class="flex flex-wrap gap-3 mt-6">
+            <a href="/login/" class="bg-white text-amber-900 px-6 py-3 rounded-full font-semibold hover:bg-amber-50">
+              Student/Teacher Login
+            </a>
+            <a href="/panel/login/" class="bg-amber-950/30 border border-amber-200/30 px-6 py-3 rounded-full font-semibold hover:bg-amber-950/40">
+              Admin Login
+            </a>
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
+            <h3 class="text-xl font-bold">Students</h3>
+            <p class="text-amber-100 text-sm mt-2">Register to view classes and manage fees.</p>
+            <div class="flex gap-3 mt-4">
+              <a href="/register/student/" class="bg-white text-amber-900 px-4 py-2 rounded-full font-semibold hover:bg-amber-50">
+                Register
+              </a>
+              <a href="/login/" class="bg-amber-950/30 border border-white/20 px-4 py-2 rounded-full font-semibold hover:bg-amber-950/40">
+                Login
+              </a>
+            </div>
+          </div>
+
+          <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
+            <h3 class="text-xl font-bold">Teachers</h3>
+            <p class="text-amber-100 text-sm mt-2">Register to create schedules and manage learning.</p>
+            <div class="flex gap-3 mt-4">
+              <a href="/register/teacher/" class="bg-white text-amber-900 px-4 py-2 rounded-full font-semibold hover:bg-amber-50">
+                Register
+              </a>
+              <a href="/login/" class="bg-amber-950/30 border border-white/20 px-4 py-2 rounded-full font-semibold hover:bg-amber-950/40">
+                Login
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="text-amber-100/80 text-sm mt-6">Note: This is a project demo portal for Narajyoti Music School.</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="max-w-4xl mx-auto px-5 md:px-8 mt-24">
+    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12">Frequently Asked Questions</h2>
+
+    <div class="space-y-5">
+      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
+          <span class="font-semibold text-lg text-stone-800">How do I join Narajyoti Music School?</span>
+          <span class="text-amber-700 text-2xl leading-none">➕</span>
+        </button>
+        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
+          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
+            Click Student Register, create your account, and you can view classes and updates from the portal.
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
+          <span class="font-semibold text-lg text-stone-800">Can teachers create schedules?</span>
+          <span class="text-amber-700 text-2xl leading-none">➕</span>
+        </button>
+        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
+          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
+            Yes — teachers can create class schedules and students can view them in the dashboard.
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
+          <span class="font-semibold text-lg text-stone-800">How are fees managed?</span>
+          <span class="text-amber-700 text-2xl leading-none">➕</span>
+        </button>
+        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
+          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
+            Students can view fee status in the portal. Payments are recorded with paid/pending status.
+          </p>
+        </div>
+      </div>
+
+      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
+        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
+          <span class="font-semibold text-lg text-stone-800">Will assessments be available?</span>
+          <span class="text-amber-700 text-2xl leading-none">➕</span>
+        </button>
+        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
+          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
+            Yes — students will submit practice recordings and receive feedback. (Feature in progress.)
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="max-w-6xl mx-auto px-5 md:px-8 mt-24 mb-24">
+    <div class="grid lg:grid-cols-2 gap-10">
+      <div>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900">Contact</h2>
+        <p class="text-stone-600 text-lg mt-3">Visit us or send a message to join classes.</p>
+
+        <div class="mt-6 space-y-3 text-stone-600">
+          <p><span class="text-stone-900 font-semibold">Phone:</span> +977-98XXXXXXXX</p>
+          <p><span class="text-stone-900 font-semibold">Email:</span> narajyotimusicschool@gmail.com</p>
+          <p><span class="text-stone-900 font-semibold">Location:</span> Kathmandu, Nepal</p>
+        </div>
+
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#access" class="px-6 py-3 rounded-full bg-amber-800 text-white hover:bg-amber-900 font-semibold">
+            Portal Access
+          </a>
+          <a href="/login/" class="px-6 py-3 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">
+            Login
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm">
+        <h3 class="text-2xl font-bold">Send a message</h3>
+        <p class="text-stone-600 mt-2">This contact form is a demo for the project.</p>
+
+        <form class="mt-6 space-y-4">
+          <input class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                 placeholder="Your name" />
+          <input class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                 placeholder="Your phone or email" />
+          <textarea rows="4" class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                    placeholder="Your message"></textarea>
+          <button type="button" class="w-full py-3 rounded-2xl bg-amber-800 text-white hover:bg-amber-900 font-semibold">
+            Send
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <footer class="border-t border-stone-200 py-8 text-center text-stone-400 text-sm">
+    © 2026 Narajyoti Music School · Learn • Practice • Perform
+  </footer>
+
+</main>
+
+<script>
+  // Mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  function toggleMobile() { mobileMenu.classList.toggle('hidden'); }
+  menuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMobile(); });
+  document.addEventListener('click', (e) => {
+    if (!mobileMenu.classList.contains('hidden') && !menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+      mobileMenu.classList.add('hidden');
+    }
+  });
+
+  // FAQ accordion
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const icon = btn.querySelector('span:last-child');
+      const expanded = btn.getAttribute('aria-expanded') === 'true';
+      btn.setAttribute('aria-expanded', String(!expanded));
+
+      if (!expanded) {
+        answer.style.maxHeight = answer.scrollHeight + 'px';
+        answer.style.opacity = '1';
+        icon.textContent = '➖';
+      } else {
+        answer.style.maxHeight = '0';
+        answer.style.opacity = '0';
+        icon.textContent = '➕';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
