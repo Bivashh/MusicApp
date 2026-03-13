@@ -1,13 +1,14 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .models import Student, Teacher, ClassSchedule, Payment
+from .models import Student, Teacher, ClassSchedule, Payment, Assessment, Submission
 import bcrypt
 import requests
 from django.conf import settings
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.conf import settings
+from django.utils import timezone
 
 
 def home(request):
@@ -331,3 +332,152 @@ def khalti_return(request):
 
     payment.save()
     return redirect("/student/payments/")
+
+def teacher_assessments(request):
+    if request.session.get("role") != "teacher":
+        return redirect("/login/")
+
+    tid = request.session.get("user_id")
+    teacher = get_object_or_404(Teacher, teacher_id=tid)
+
+    assessments = Assessment.objects.filter(teacher=teacher).order_by("-created_at")
+    return render(request, "teacher_assessments.html", {"assessments": assessments})
+
+
+def teacher_create_assessment(request):
+    if request.session.get("role") != "teacher":
+        return redirect("/login/")
+
+    tid = request.session.get("user_id")
+    teacher = get_object_or_404(Teacher, teacher_id=tid)
+
+    # teacher's classes only
+    classes = ClassSchedule.objects.filter(teacher=teacher).order_by("-date")
+
+    if request.method == "POST":
+        schedule_id = request.POST.get("schedule_id")
+        title = request.POST.get("title")
+        instructions = request.POST.get("instructions")
+        deadline = request.POST.get("deadline")
+        ref_audio = request.FILES.get("reference_audio")
+
+        cls = get_object_or_404(ClassSchedule, schedule_id=schedule_id)
+
+        Assessment.objects.create(
+            teacher=teacher,
+            class_schedule=cls,
+            title=title,
+            instructions=instructions,
+            deadline=deadline,
+            reference_audio=ref_audio
+        )
+
+        return redirect("/teacher/assessments/")
+
+    return render(request, "teacher_create_assessment.html", {"classes": classes})
+
+def teacher_submissions(request, assessment_id):
+    if request.session.get("role") != "teacher":
+        return redirect("/login/")
+
+    tid = request.session.get("user_id")
+    teacher = get_object_or_404(Teacher, teacher_id=tid)
+
+    assessment = get_object_or_404(Assessment, assessment_id=assessment_id, teacher=teacher)
+    submissions = Submission.objects.filter(assessment=assessment).order_by("-submitted_at")
+
+    return render(request, "teacher_submissions.html", {
+        "assessment": assessment,
+        "submissions": submissions
+    })
+
+
+def teacher_grade_submission(request, submission_id):
+    if request.session.get("role") != "teacher":
+        return redirect("/login/")
+
+    tid = request.session.get("user_id")
+    teacher = get_object_or_404(Teacher, teacher_id=tid)
+
+    submission = get_object_or_404(Submission, submission_id=submission_id)
+    # safety: teacher must own this assessment
+    if submission.assessment.teacher.teacher_id != teacher.teacher_id:
+        return redirect("/teacher/assessments/")
+
+    if request.method == "POST":
+        score = request.POST.get("score")
+        feedback = request.POST.get("feedback")
+
+        submission.score = int(score) if score else None
+        submission.feedback = feedback
+        submission.graded_at = timezone.now()
+        submission.save()
+
+        return redirect(f"/teacher/assessments/{submission.assessment.assessment_id}/submissions/")
+
+    return render(request, "teacher_grade_submission.html", {"s": submission})
+
+def student_assessments(request):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    # simple: show all assessments (later you can filter by enrolled class)
+    assessments = Assessment.objects.all().order_by("-created_at")
+
+    # map submission status
+    submitted_ids = set(Submission.objects.filter(student=student).values_list("assessment_id", flat=True))
+
+    return render(request, "student_assessments.html", {
+        "assessments": assessments,
+        "submitted_ids": submitted_ids
+    })
+
+
+def student_submit_assessment(request, assessment_id):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    a = get_object_or_404(Assessment, assessment_id=assessment_id)
+
+    existing = Submission.objects.filter(assessment=a, student=student).first()
+
+    if request.method == "POST":
+        audio = request.FILES.get("student_audio")
+        comment = request.POST.get("comment")
+
+        if not audio:
+            return render(request, "student_submit_assessment.html", {"a": a, "error": "Please upload an audio file."})
+
+        if existing:
+            # replace submission (optional)
+            existing.student_audio = audio
+            existing.comment = comment
+            existing.submitted_at = timezone.now()
+            existing.save()
+        else:
+            Submission.objects.create(
+                assessment=a,
+                student=student,
+                student_audio=audio,
+                comment=comment
+            )
+
+        return redirect("/student/assessments/")
+
+    return render(request, "student_submit_assessment.html", {"a": a, "existing": existing})
+
+def student_results(request):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    submissions = Submission.objects.filter(student=student).order_by("-submitted_at")
+    return render(request, "student_results.html", {"submissions": submissions})

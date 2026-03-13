@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Submissions</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gradient-to-r from-indigo-600 to-purple-600 min-h-screen">
+<div class="max-w-6xl mx-auto py-10 px-4">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h2 class="text-3xl font-bold text-white">Submissions</h2>
+      <p class="text-white/80">Assessment: <span class="font-semibold">{{ assessment.title }}</span></p>
+    </div>
+    <a href="/teacher/assessments/" class="px-5 py-2 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20">← Back</a>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-lg p-6">
+    <table class="w-full">
+      <thead>
+        <tr class="text-left text-gray-600 border-b">
+          <th class="py-3">Student</th>
+          <th class="py-3">Audio</th>
+          <th class="py-3">Score</th>
+          <th class="py-3">Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in submissions %}
+        <tr class="border-b hover:bg-gray-50">
+          <td class="py-4 font-semibold">{{ s.student.full_name }}</td>
+          <td class="py-4">
+            <audio controls>
+              <source src="{{ s.student_audio.url }}">
+            </audio>
+          </td>
+          <td class="py-4">
+            {% if s.score is not None %}
+              <span class="font-semibold text-emerald-700">{{ s.score }}</span>
+            {% else %}
+              <span class="text-gray-400">Not graded</span>
+            {% endif %}
+          </td>
+          <td class="py-4">
+            <a href="/teacher/submission/{{ s.submission_id }}/grade/"
+               class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+              Grade
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr><td class="py-6 text-center text-gray-500" colspan="4">No submissions yet.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>

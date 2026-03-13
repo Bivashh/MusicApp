@@ -70,3 +70,40 @@ class Payment(models.Model):
     def __str__(self):
         return f"{self.student.full_name} - {self.class_schedule.class_name} - {self.month}"
 
+class Assessment(models.Model):
+    assessment_id = models.AutoField(primary_key=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.CASCADE)
+    class_schedule = models.ForeignKey(ClassSchedule, on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=150)
+    instructions = models.TextField(blank=True, null=True)
+    deadline = models.DateField()
+
+    reference_audio = models.FileField(upload_to="assessments/reference/", blank=True, null=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} ({self.class_schedule.class_name})"
+
+
+class Submission(models.Model):
+    submission_id = models.AutoField(primary_key=True)
+    assessment = models.ForeignKey(Assessment, on_delete=models.CASCADE)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+
+    student_audio = models.FileField(upload_to="assessments/submissions/")
+    comment = models.TextField(blank=True, null=True)
+
+    # teacher grading
+    score = models.IntegerField(blank=True, null=True)  # 0-100
+    feedback = models.TextField(blank=True, null=True)
+
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    graded_at = models.DateTimeField(blank=True, null=True)
+
+    class Meta:
+        unique_together = ("assessment", "student")  # 1 submission per student per assessment
+
+    def __str__(self):
+        return f"{self.student.full_name} - {self.assessment.title}"

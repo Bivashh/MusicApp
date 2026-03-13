@@ -24,4 +24,14 @@ urlpatterns=[
     path("student/payments/new/", views.student_payment_new, name="student_payment_new"),
     path("khalti/initiate/<int:payment_id>/", views.khalti_initiate, name="khalti_initiate"),
     path("khalti/return/", views.khalti_return, name="khalti_return"),
+    # Teacher
+    path("teacher/assessments/", views.teacher_assessments, name="teacher_assessments"),
+    path("teacher/assessments/create/", views.teacher_create_assessment, name="teacher_create_assessment"),
+    path("teacher/assessments/<int:assessment_id>/submissions/", views.teacher_submissions, name="teacher_submissions"),
+    path("teacher/submission/<int:submission_id>/grade/", views.teacher_grade_submission, name="teacher_grade_submission"),
+
+    # Student
+    path("student/assessments/", views.student_assessments, name="student_assessments"),
+    path("student/assessments/<int:assessment_id>/submit/", views.student_submit_assessment, name="student_submit_assessment"),
+    path("student/results/", views.student_results, name="student_results"),
 ]

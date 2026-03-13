@@ -146,3 +146,6 @@ WEBSITE_URL = "http://127.0.0.1:8000"
 
 ADMIN_USERNAME = "admin"
 ADMIN_PASSWORD = "admin"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
