@@ -101,6 +101,10 @@ class Submission(models.Model):
 
     submitted_at = models.DateTimeField(auto_now_add=True)
     graded_at = models.DateTimeField(blank=True, null=True)
+    auto_score = models.FloatField(null=True, blank=True)
+    pitch_score = models.FloatField(null=True, blank=True)
+    rhythm_score = models.FloatField(null=True, blank=True)
+    auto_feedback = models.TextField(null=True, blank=True)
 
     class Meta:
         unique_together = ("assessment", "student")  # 1 submission per student per assessment

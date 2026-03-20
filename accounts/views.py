@@ -9,6 +9,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.conf import settings
 from django.utils import timezone
+from .audio_ai import analyze_audio
 
 
 def home(request):
@@ -452,21 +453,39 @@ def student_submit_assessment(request, assessment_id):
         comment = request.POST.get("comment")
 
         if not audio:
-            return render(request, "student_submit_assessment.html", {"a": a, "error": "Please upload an audio file."})
+            return render(request, "student_submit_assessment.html", {
+                "a": a,
+                "existing": existing,
+                "error": "Please upload an audio file."
+            })
 
+        # Save / update submission
         if existing:
-            # replace submission (optional)
             existing.student_audio = audio
             existing.comment = comment
             existing.submitted_at = timezone.now()
             existing.save()
+            submission_obj = existing
         else:
-            Submission.objects.create(
+            submission_obj = Submission.objects.create(
                 assessment=a,
                 student=student,
                 student_audio=audio,
                 comment=comment
             )
+
+        # ✅ Auto feedback (only if teacher uploaded reference audio)
+        if a.reference_audio:
+            ref_path = a.reference_audio.path
+            stu_path = submission_obj.student_audio.path
+
+            result = analyze_audio(ref_path, stu_path)
+
+            submission_obj.pitch_score = result["pitch_score"]
+            submission_obj.rhythm_score = result["rhythm_score"]
+            submission_obj.auto_score = result["auto_score"]
+            submission_obj.auto_feedback = result["feedback"]
+            submission_obj.save()
 
         return redirect("/student/assessments/")
 
