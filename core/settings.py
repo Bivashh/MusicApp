@@ -140,7 +140,7 @@ EMAIL_USE_TLS=True
 EMAIL_HOST_USER='dhakalbivash40@gmail.com'
 EMAIL_HOST_PASSWORD='nrligphzvdxozpss'
 
-KHALTI_SECRET_KEY = "a0a2206792294e7a8ebae3cee8035533"
+KHALTI_SECRET_KEY = "ee9fb0553dc24efda9805b5b19ac2d82"
 KHALTI_BASE_URL = "https://dev.khalti.com/api/v2"
 WEBSITE_URL = "http://127.0.0.1:8000"
 

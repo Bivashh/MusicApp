@@ -106,6 +106,8 @@ class Submission(models.Model):
     rhythm_score = models.FloatField(null=True, blank=True)
     auto_feedback = models.TextField(null=True, blank=True)
     ai_feedback = models.TextField(null=True, blank=True)
+    pitch_plot = models.ImageField(upload_to="assessment_graphs/", null=True, blank=True)
+    rhythm_plot = models.ImageField(upload_to="assessment_graphs/", null=True, blank=True)
 
     class Meta:
         unique_together = ("assessment", "student")  # 1 submission per student per assessment

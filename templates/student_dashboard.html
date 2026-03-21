@@ -5,62 +5,245 @@
   <title>Student Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
+<body class="bg-stone-50 min-h-screen text-stone-800">
 
-<body class="bg-gradient-to-br from-green-100 to-emerald-200 min-h-screen">
-
-<div class="max-w-5xl mx-auto py-10 px-4">
-
-  <h2 class="text-3xl font-bold text-center text-gray-800 mb-8">
-    Student Dashboard
-  </h2>
-
-  <div class="flex flex-wrap gap-3 justify-center mb-8">
-  <a href="/student/profile/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">My Profile</a>
-  <a href="/student/my-classes/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">My Classes</a>
-  <a href="/student/assessments/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">Assessments</a>
-  <a href="/student/results/" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">Results</a>
-  <a href="{% url 'student_payment' %}" class="px-5 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold text-gray-700">Payments</a>
-</div>
-
-  <h3 class="text-xl font-semibold mb-4 text-gray-700">
-    Available Classes
-  </h3>
-
-  <div class="grid md:grid-cols-2 gap-6">
-
-    {% for c in classes %}
-      <div class="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-
-        <h4 class="text-lg font-bold text-indigo-600 mb-2">
-          {{ c.class_name }}
-        </h4>
-
-        <p class="text-gray-700">
-          <span class="font-semibold">Teacher:</span>
-          {{ c.teacher.full_name }}
-        </p>
-
-        <p class="text-gray-700">
-          <span class="font-semibold">Date:</span>
-          {{ c.date }}
-        </p>
-
-        <p class="text-gray-700">
-          <span class="font-semibold">Time:</span>
-          {{ c.start_time }} - {{ c.end_time }}
-        </p>
-
+  <!-- NAVBAR -->
+  <nav class="border-b border-stone-200 bg-white/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-6xl mx-auto px-5 py-4 flex flex-col md:flex-row gap-4 md:items-center md:justify-between">
+      <div>
+        <p class="text-sm font-semibold text-amber-700">Narajyoti Music School</p>
+        <h2 class="text-2xl font-extrabold text-stone-900">Student Dashboard</h2>
       </div>
 
-    {% empty %}
-      <p class="text-center text-gray-600 col-span-full">
-        No classes available.
-      </p>
-    {% endfor %}
+      <div class="flex flex-wrap gap-3">
+        <a href="/student/profile/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-stone-50 font-semibold transition">
+          My Profile
+        </a>
+        <a href="/student/my-classes/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-stone-50 font-semibold transition">
+          My Classes
+        </a>
+        <a href="/student/assessments/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-stone-50 font-semibold transition">
+          Assessments
+        </a>
+        <a href="/student/results/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-stone-50 font-semibold transition">
+          Results
+        </a>
+        <a href="{% url 'student_payment' %}" class="px-4 py-2 rounded-full bg-amber-800 text-white hover:bg-amber-900 font-semibold transition">
+          Payments
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-5 py-10 space-y-8">
+
+    <!-- HERO -->
+    <div class="relative overflow-hidden bg-gradient-to-br from-amber-900 via-amber-800 to-amber-700 text-white rounded-[2rem] p-8 md:p-10 shadow-xl">
+      <div class="absolute top-0 right-0 w-56 h-56 bg-white/10 rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 left-0 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div>
+          <p class="text-amber-200 font-semibold text-sm tracking-wide">Welcome back</p>
+          <h3 class="text-3xl md:text-4xl font-extrabold mt-2">
+            {{ student.full_name|default:"Student" }}
+          </h3>
+          <p class="text-amber-100 mt-3 max-w-2xl">
+            Manage your personal details, classes, assessments, results, and payment records from one place.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 min-w-[260px]">
+          <div class="bg-white/10 border border-white/20 backdrop-blur rounded-3xl p-4">
+            <p class="text-sm text-amber-100">Email</p>
+            <p class="font-bold mt-1 break-words">{{ student.email|default:"Not available" }}</p>
+          </div>
+          <div class="bg-white/10 border border-white/20 backdrop-blur rounded-3xl p-4">
+            <p class="text-sm text-amber-100">Phone</p>
+            <p class="font-bold mt-1">{{ student.phone|default:"Not set" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- QUICK INFO CARDS -->
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-stone-500">Student Name</p>
+            <h4 class="text-xl font-bold text-stone-900 mt-1">{{ student.full_name|default:"Not available" }}</h4>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-xl">
+            👤
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-stone-500">Email Address</p>
+            <h4 class="text-base font-bold text-stone-900 mt-1 break-words">{{ student.email|default:"Not available" }}</h4>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-xl">
+            ✉️
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-semibold text-stone-500">Address</p>
+            <h4 class="text-base font-bold text-stone-900 mt-1">{{ student.address|default:"Kathmandu, Nepal" }}</h4>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-xl">
+            📍
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROFILE + SETTINGS SECTION -->
+    <div class="grid lg:grid-cols-3 gap-6">
+
+      <!-- LEFT SIDEBAR CARD -->
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6 lg:p-7">
+        <div class="flex flex-col items-center text-center">
+          <div class="w-24 h-24 rounded-full bg-gradient-to-br from-amber-200 to-amber-100 border-4 border-white shadow-md flex items-center justify-center text-3xl font-bold text-amber-900">
+            {{ student.full_name|default:"S"|slice:":1" }}
+          </div>
+
+          <h3 class="mt-4 text-xl font-extrabold text-stone-900">{{ student.full_name|default:"Student" }}</h3>
+          <p class="text-stone-500 text-sm mt-1">{{ student.email|default:"No email available" }}</p>
+
+          <div class="w-full mt-6 space-y-3">
+            <div class="rounded-2xl bg-stone-50 border border-stone-200 px-4 py-3 text-left">
+              <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Phone</p>
+              <p class="text-sm font-bold text-stone-900 mt-1">{{ student.phone|default:"Not set" }}</p>
+            </div>
+
+            <div class="rounded-2xl bg-stone-50 border border-stone-200 px-4 py-3 text-left">
+              <p class="text-xs font-semibold text-stone-500 uppercase tracking-wide">Address</p>
+              <p class="text-sm font-bold text-stone-900 mt-1">{{ student.address|default:"Not set" }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDIT PROFILE CARD -->
+      <div class="lg:col-span-2 bg-white rounded-3xl border border-stone-200 shadow-sm p-6 sm:p-8">
+        <div class="flex items-start justify-between gap-4 flex-wrap mb-6">
+          <div>
+            <p class="text-sm font-semibold text-amber-700">Personal Settings</p>
+            <h3 class="text-2xl font-extrabold text-stone-900">Manage Profile</h3>
+            <p class="text-stone-500 mt-1">Update your information and access account options.</p>
+          </div>
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-xl">
+            ⚙️
+          </div>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-5">
+          <div>
+            <label class="block text-sm font-semibold text-stone-600 mb-2">Full Name</label>
+            <input
+              class="w-full px-4 py-3.5 border border-stone-200 rounded-2xl bg-stone-50 focus:ring-4 focus:ring-amber-100 focus:border-amber-400 outline-none transition"
+              placeholder="Your name"
+              value="{{ student.full_name|default:'' }}"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-stone-600 mb-2">Email</label>
+            <input
+              class="w-full px-4 py-3.5 border border-stone-200 rounded-2xl bg-stone-100 outline-none"
+              placeholder="Email"
+              value="{{ student.email|default:'' }}"
+              disabled
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-stone-600 mb-2">Phone</label>
+            <input
+              class="w-full px-4 py-3.5 border border-stone-200 rounded-2xl bg-stone-50 focus:ring-4 focus:ring-amber-100 focus:border-amber-400 outline-none transition"
+              placeholder="98XXXXXXXX"
+              value="{{ student.phone|default:'' }}"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-semibold text-stone-600 mb-2">Address</label>
+            <input
+              class="w-full px-4 py-3.5 border border-stone-200 rounded-2xl bg-stone-50 focus:ring-4 focus:ring-amber-100 focus:border-amber-400 outline-none transition"
+              placeholder="Kathmandu, Nepal"
+              value="{{ student.address|default:'' }}"
+            >
+          </div>
+        </div>
+
+        <div class="mt-8 flex gap-3 flex-wrap">
+          <button class="px-6 py-3 bg-amber-800 text-white rounded-full hover:bg-amber-900 transition font-semibold shadow-sm">
+            Save Changes
+          </button>
+          <a href="/student/change-password/" class="px-6 py-3 bg-white border border-stone-300 rounded-full hover:border-amber-500 hover:bg-stone-50 transition font-semibold">
+            Change Password
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- CLASSES SECTION -->
+    <div class="bg-gradient-to-r from-white to-amber-50 border border-stone-200 rounded-[2rem] p-6 md:p-8 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <p class="text-sm font-semibold text-amber-700">Learning Area</p>
+          <h3 class="text-3xl font-extrabold text-stone-900">Available Classes</h3>
+          <p class="text-stone-500 mt-2">See the latest classes created by your teachers.</p>
+        </div>
+        <div class="w-14 h-14 rounded-3xl bg-amber-100 border border-amber-200 flex items-center justify-center text-2xl shadow-sm">
+          🎵
+        </div>
+      </div>
+    </div>
+
+    <div class="grid md:grid-cols-2 gap-6">
+      {% for c in classes %}
+        <div class="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm hover:shadow-md hover:-translate-y-1 transition duration-200">
+          <div class="flex items-start justify-between gap-4">
+            <div>
+              <h4 class="text-xl font-bold text-stone-900">{{ c.class_name }}</h4>
+              <p class="text-stone-500 mt-1">Teacher: {{ c.teacher.full_name }}</p>
+            </div>
+            <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-xl">
+              🎶
+            </div>
+          </div>
+
+          <div class="mt-5 grid sm:grid-cols-2 gap-4 text-sm">
+            <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200">
+              <p class="text-stone-500 font-semibold">Date</p>
+              <p class="text-stone-900 font-bold mt-1">{{ c.date }}</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-stone-50 border border-stone-200">
+              <p class="text-stone-500 font-semibold">Time</p>
+              <p class="text-stone-900 font-bold mt-1">{{ c.start_time }} - {{ c.end_time }}</p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="md:col-span-2 bg-white p-10 rounded-3xl border border-stone-200 shadow-sm text-center">
+          <div class="w-16 h-16 mx-auto rounded-3xl bg-amber-100 border border-amber-200 flex items-center justify-center text-2xl mb-4">
+            🎵
+          </div>
+          <h4 class="text-xl font-bold text-stone-900">No classes available</h4>
+          <p class="text-stone-500 mt-2">Your teachers have not added any classes yet.</p>
+        </div>
+      {% endfor %}
+    </div>
 
   </div>
-
-</div>
-
 </body>
 </html>

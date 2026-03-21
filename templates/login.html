@@ -2,32 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-indigo-600 to-purple-600 min-h-screen flex items-center justify-center">
+<body class="min-h-screen bg-stone-50 text-stone-800">
+  <div class="min-h-screen grid lg:grid-cols-2">
+    <div class="hidden lg:flex bg-gradient-to-br from-amber-100 via-stone-100 to-white items-center justify-center p-12 border-r border-stone-200">
+      <div class="max-w-lg">
+        <div class="inline-flex items-center gap-3 mb-6">
+          <div class="w-12 h-12 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-2xl">🎵</div>
+          <div>
+            <p class="text-2xl font-extrabold text-amber-900">Narajyoti</p>
+            <p class="text-sm text-stone-500 font-semibold">Music School Portal</p>
+          </div>
+        </div>
+        <h1 class="text-4xl font-extrabold leading-tight text-stone-900">Welcome back to your music portal.</h1>
+        <p class="mt-4 text-lg text-stone-600">Login to manage classes, assessments, payments, and progress without changing your existing features.</p>
+      </div>
+    </div>
 
-<div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-  <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
+    <div class="flex items-center justify-center px-5 py-12">
+      <div class="w-full max-w-md bg-white border border-stone-200 rounded-3xl shadow-sm p-8 md:p-10">
+        <div class="text-center mb-8">
+          <div class="w-14 h-14 mx-auto rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-2xl mb-4">🔐</div>
+          <h2 class="text-3xl font-extrabold text-stone-900">Login</h2>
+          <p class="text-stone-500 mt-2">Student and teacher portal access</p>
+        </div>
 
-  <form method="POST">
-    {% csrf_token %}
-    <input name="email" placeholder="Email"
-      class="w-full mb-4 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        <form method="POST" class="space-y-4">
+          {% csrf_token %}
+          <div>
+            <label class="block text-sm font-semibold text-stone-600 mb-2">Email</label>
+            <input name="email" placeholder="Enter your email"
+              class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400">
+          </div>
 
-    <input name="password" type="password" placeholder="Password"
-      class="w-full mb-6 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          <div>
+            <label class="block text-sm font-semibold text-stone-600 mb-2">Password</label>
+            <input name="password" type="password" placeholder="Enter your password"
+              class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400">
+          </div>
 
-    <button class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
-      Login
-    </button>
-  </form>
+          <button class="w-full py-3 rounded-2xl bg-amber-800 text-white hover:bg-amber-900 font-semibold transition">
+            Login
+          </button>
+        </form>
 
-  <div class="text-center mt-6 text-sm">
-    <a href="/register/student/" class="text-indigo-600 hover:underline">Student Register</a> |
-    <a href="/register/teacher/" class="text-green-600 hover:underline">Teacher Register</a>
+        <div class="text-center mt-6 text-sm text-stone-500">
+          <a href="/register/student/" class="text-amber-800 hover:underline font-semibold">Student Register</a>
+          <span class="mx-2">•</span>
+          <a href="/register/teacher/" class="text-amber-800 hover:underline font-semibold">Teacher Register</a>
+        </div>
+
+        <div class="text-center mt-4">
+          <a href="/" class="text-stone-500 hover:text-amber-800 font-medium">← Back to Home</a>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
-
 </body>
 </html>

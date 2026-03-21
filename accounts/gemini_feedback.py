@@ -49,7 +49,7 @@ Rules:
         ],
         "generationConfig": {
             "temperature": 0.5,
-            "maxOutputTokens": 220
+            "maxOutputTokens": 400
         }
     }
 

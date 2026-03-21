@@ -5,40 +5,38 @@
   <title>Make Payment</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-br from-green-100 to-emerald-200 min-h-screen">
-<div class="max-w-3xl mx-auto py-10 px-4">
+<body class="bg-stone-50 min-h-screen text-stone-800">
+<div class="max-w-3xl mx-auto py-10 px-5">
   <div class="flex items-center justify-between mb-8">
-    <h2 class="text-3xl font-bold text-gray-800">Make Payment</h2>
-    <a href="/student/payments/" class="text-indigo-700 hover:underline font-semibold">← Back</a>
+    <div>
+      <p class="text-sm font-semibold text-amber-700">Student Portal</p>
+      <h2 class="text-3xl font-extrabold text-stone-900">Make Payment</h2>
+    </div>
+    <a href="/student/payments/" class="px-5 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-white font-semibold">← Back</a>
   </div>
 
-  <div class="bg-white rounded-2xl shadow-lg p-8">
-    <form method="POST" class="space-y-4">
+  <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-8">
+    <form method="POST" class="space-y-5">
       {% csrf_token %}
-
       <div>
-        <label class="block text-sm font-semibold text-gray-600 mb-2">Select Class</label>
-        <select name="schedule_id" class="w-full px-4 py-3 border rounded-xl bg-gray-50">
+        <label class="block text-sm font-semibold text-stone-600 mb-2">Select Class</label>
+        <select name="schedule_id" class="w-full px-4 py-3 border border-stone-200 rounded-2xl bg-stone-50">
           {% for c in classes %}
             <option value="{{ c.schedule_id }}">{{ c.class_name }} ({{ c.teacher.full_name }})</option>
           {% endfor %}
         </select>
       </div>
-
       <div class="grid md:grid-cols-2 gap-4">
         <div>
-          <label class="block text-sm font-semibold text-gray-600 mb-2">Month</label>
-          <input name="month" placeholder="March 2026" class="w-full px-4 py-3 border rounded-xl" required>
+          <label class="block text-sm font-semibold text-stone-600 mb-2">Month</label>
+          <input name="month" placeholder="March 2026" class="w-full px-4 py-3 border border-stone-200 rounded-2xl bg-stone-50" required>
         </div>
         <div>
-          <label class="block text-sm font-semibold text-gray-600 mb-2">Amount (Rs.)</label>
-          <input name="amount" type="number" placeholder="2500" class="w-full px-4 py-3 border rounded-xl" required>
+          <label class="block text-sm font-semibold text-stone-600 mb-2">Amount (Rs.)</label>
+          <input name="amount" type="number" placeholder="2500" class="w-full px-4 py-3 border border-stone-200 rounded-2xl bg-stone-50" required>
         </div>
       </div>
-
-      <button class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition font-semibold">
-        Continue to Khalti
-      </button>
+      <button class="w-full py-3 bg-amber-800 text-white rounded-2xl hover:bg-amber-900 transition font-semibold">Continue to Khalti</button>
     </form>
   </div>
 </div>

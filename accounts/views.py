@@ -11,7 +11,7 @@ from django.conf import settings
 from django.utils import timezone
 from .audio_ai import analyze_audio
 from .gemini_feedback import generate_gemini_feedback
-
+from .graph_utils import generate_pitch_plot , generate_rhythm_plot
 
 def home(request):
     return render(request, "home.html")
@@ -182,14 +182,30 @@ def loginPage(request):
     return render(request, 'login.html')
 
 def student_dashboard(request):
-    classes= ClassSchedule.objects.all()
-    return render(request, 'student_dashboard.html',{'classes':classes})
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    classes = ClassSchedule.objects.all()
+
+    return render(request, 'student_dashboard.html', {
+        'student': student,
+        'classes': classes
+    })
 
 def teacher_dashboard(request):
     return render(request, 'teacher_dashboard.html')
 
 def student_profile(request):
-    return render(request, "student_profile.html")
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    return render(request, "student_profile.html", {"student": student})
 
 def student_payment(request):
     return render(request, 'student_payments.html')
@@ -475,31 +491,48 @@ def student_submit_assessment(request, assessment_id):
                 comment=comment
             )
 
-        # Auto feedback (only if teacher uploaded reference audio)
+        # Auto feedback + AI feedback + graphs (only if teacher uploaded reference audio)
         if a.reference_audio:
             ref_path = a.reference_audio.path
             stu_path = submission_obj.student_audio.path
 
-            result = analyze_audio(ref_path, stu_path)
-
-            submission_obj.pitch_score = result["pitch_score"]
-            submission_obj.rhythm_score = result["rhythm_score"]
-            submission_obj.auto_score = result["auto_score"]
-            submission_obj.auto_feedback = result["feedback"]
-
-            # Gemini dynamic feedback
+            # ---- Librosa scoring ----
             try:
-                submission_obj.ai_feedback = generate_gemini_feedback(
-                    title=a.title,
-                    pitch_score=result["pitch_score"],
-                    rhythm_score=result["rhythm_score"],
-                    auto_score=result["auto_score"],
-                )
+                result = analyze_audio(ref_path, stu_path)
+
+                submission_obj.pitch_score = result["pitch_score"]
+                submission_obj.rhythm_score = result["rhythm_score"]
+                submission_obj.auto_score = result["auto_score"]
+                submission_obj.auto_feedback = result["feedback"]
+            except Exception as e:
+                print("LIBROSA ERROR:", e)
+
+            # ---- Gemini dynamic feedback ----
+            try:
+                # Only call Gemini if we have scores computed
+                if submission_obj.auto_score is not None:
+                    submission_obj.ai_feedback = generate_gemini_feedback(
+                        title=a.title,
+                        pitch_score=float(submission_obj.pitch_score or 0),
+                        rhythm_score=float(submission_obj.rhythm_score or 0),
+                        auto_score=float(submission_obj.auto_score or 0),
+                    )
             except Exception as e:
                 print("GEMINI ERROR:", e)
                 submission_obj.ai_feedback = None
 
-            # ✅ THIS WAS MISSING
+            # ---- Graph generation ----
+            try:
+                pitch_rel = generate_pitch_plot(ref_path, stu_path)
+                rhythm_rel = generate_rhythm_plot(ref_path, stu_path)
+
+                # Assign to ImageFields
+                submission_obj.pitch_plot.name = pitch_rel
+                submission_obj.rhythm_plot.name = rhythm_rel
+            except Exception as e:
+                print("GRAPH ERROR:", e)
+
+            # Save all updates
             submission_obj.save()
 
         return redirect("/student/assessments/")
