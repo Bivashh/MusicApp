@@ -5,45 +5,95 @@
   <title>Grade Submission</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-indigo-600 to-purple-600 min-h-screen">
-<div class="max-w-3xl mx-auto py-10 px-4">
-  <div class="flex items-center justify-between mb-8">
-    <h2 class="text-3xl font-bold text-white">Grade Submission</h2>
+
+<body class="bg-stone-50 min-h-screen text-stone-800">
+
+<nav class="bg-white/90 backdrop-blur border-b border-stone-200 sticky top-0 z-40">
+  <div class="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/teacher/dashboard/" class="font-extrabold text-amber-900">🎵 Narajyoti Teacher</a>
     <a href="/teacher/assessments/{{ s.assessment.assessment_id }}/submissions/"
-       class="px-5 py-2 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20">← Back</a>
+       class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">
+      ← Back
+    </a>
   </div>
+</nav>
 
-  <div class="bg-white rounded-2xl shadow-lg p-8">
-    <p class="text-gray-700"><span class="font-semibold">Student:</span> {{ s.student.full_name }}</p>
-    <p class="text-gray-700"><span class="font-semibold">Assessment:</span> {{ s.assessment.title }}</p>
+<div class="max-w-5xl mx-auto px-4 py-10">
+  <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-8">
+    <h2 class="text-3xl font-extrabold text-stone-900">Grade Submission</h2>
+    <p class="text-stone-600 mt-2">
+      Student: <span class="font-semibold">{{ s.student.full_name }}</span> ·
+      Assessment: <span class="font-semibold">{{ s.assessment.title }}</span>
+    </p>
 
-    <div class="mt-4">
-      <p class="font-semibold text-gray-700 mb-2">Audio</p>
-      <audio controls class="w-full">
-        <source src="{{ s.student_audio.url }}">
-      </audio>
+    <div class="mt-6 grid md:grid-cols-2 gap-4">
+      <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200">
+        <p class="font-semibold text-stone-700">Auto Score</p>
+        <p class="text-2xl font-extrabold mt-2">
+          {% if s.auto_score is not None %}{{ s.auto_score|floatformat:1 }}{% else %}-{% endif %}
+        </p>
+        <p class="text-stone-500 text-sm mt-2">
+          Pitch: {% if s.pitch_score is not None %}{{ s.pitch_score|floatformat:1 }}{% else %}-{% endif %}
+          · Rhythm: {% if s.rhythm_score is not None %}{{ s.rhythm_score|floatformat:1 }}{% else %}-{% endif %}
+        </p>
+      </div>
+
+      <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200">
+        <p class="font-semibold text-stone-700">Submission Audio</p>
+        <audio controls class="mt-3 w-full">
+          <source src="{{ s.student_audio.url }}">
+        </audio>
+      </div>
+    </div>
+
+    <div class="mt-6 grid md:grid-cols-2 gap-4">
+      <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200">
+        <p class="font-semibold text-stone-700">Pitch Graph</p>
+        {% if s.pitch_plot %}
+          <img src="{{ s.pitch_plot.url }}" class="mt-3 w-full rounded-xl border border-stone-200" alt="Pitch Graph">
+        {% else %}
+          <p class="mt-3 text-sm text-stone-500">No pitch graph available.</p>
+        {% endif %}
+      </div>
+
+      <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200">
+        <p class="font-semibold text-stone-700">Rhythm Graph</p>
+        {% if s.rhythm_plot %}
+          <img src="{{ s.rhythm_plot.url }}" class="mt-3 w-full rounded-xl border border-stone-200" alt="Rhythm Graph">
+        {% else %}
+          <p class="mt-3 text-sm text-stone-500">No rhythm graph available.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="mt-6 p-5 rounded-2xl bg-stone-50 border border-stone-200">
+      <p class="font-semibold text-stone-700">AI Coach Feedback</p>
+      <p class="text-stone-600 mt-2 whitespace-pre-line">{{ s.ai_feedback|default:"-" }}</p>
     </div>
 
     <form method="POST" class="mt-6 space-y-4">
       {% csrf_token %}
+
       <div>
-        <label class="block text-sm font-semibold text-gray-600 mb-2">Score (0-100)</label>
-        <input type="number" name="score" min="0" max="100"
+        <label class="block text-sm font-semibold text-stone-700 mb-2">Teacher Score (0–100)</label>
+        <input type="number" name="score" min="0" max="100" required
                value="{{ s.score|default_if_none:'' }}"
-               class="w-full px-4 py-3 border rounded-xl" required>
+               class="w-full px-4 py-3 rounded-2xl bg-white border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400">
       </div>
 
       <div>
-        <label class="block text-sm font-semibold text-gray-600 mb-2">Feedback</label>
-        <textarea name="feedback" rows="4" class="w-full px-4 py-3 border rounded-xl"
+        <label class="block text-sm font-semibold text-stone-700 mb-2">Teacher Feedback</label>
+        <textarea name="feedback" rows="4"
+                  class="w-full px-4 py-3 rounded-2xl bg-white border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
                   placeholder="Write feedback...">{{ s.feedback|default_if_none:'' }}</textarea>
       </div>
 
-      <button class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold">
+      <button class="w-full py-3 rounded-2xl bg-amber-800 text-white hover:bg-amber-900 font-semibold">
         Save Grade
       </button>
     </form>
   </div>
 </div>
+
 </body>
 </html>

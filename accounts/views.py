@@ -98,6 +98,10 @@ def admin_logout(request):
     request.session.flush()
     return redirect("/panel/login/")
 
+def logout_view(request):
+    request.session.flush()
+    return redirect("/login/")
+
 
 def student_register(request):
     if request.method == 'POST':
@@ -181,6 +185,7 @@ def loginPage(request):
 
     return render(request, 'login.html')
 
+
 def student_dashboard(request):
     if request.session.get("role") != "student":
         return redirect("/login/")
@@ -196,7 +201,40 @@ def student_dashboard(request):
     })
 
 def teacher_dashboard(request):
-    return render(request, 'teacher_dashboard.html')
+    if request.session.get("role") != "teacher":
+        return redirect("/login/")
+
+    tid = request.session.get("user_id")
+    teacher = get_object_or_404(Teacher, teacher_id=tid)
+
+    total_classes = ClassSchedule.objects.filter(teacher=teacher).count()
+    total_assessments = Assessment.objects.filter(teacher=teacher).count()
+
+    pending_submissions = Submission.objects.filter(
+        assessment__teacher=teacher,
+        score__isnull=True
+    ).count()
+
+    recent_classes = ClassSchedule.objects.filter(teacher=teacher).order_by("-date")[:5]
+    recent_assessments = Assessment.objects.filter(teacher=teacher).order_by("-created_at")[:5]
+
+    return render(request, "teacher_dashboard.html", {
+        "teacher": teacher,
+        "total_classes": total_classes,
+        "total_assessments": total_assessments,
+        "pending_submissions": pending_submissions,
+        "recent_classes": recent_classes,
+        "recent_assessments": recent_assessments,
+    })
+
+
+def teacher_profile(request):
+    if request.session.get("role") != "teacher":
+        return redirect("/login/")
+
+    tid = request.session.get("user_id")
+    teacher = get_object_or_404(Teacher, teacher_id=tid)
+    return render(request, "teacher_profile.html", {"teacher": teacher})
 
 def student_profile(request):
     if request.session.get("role") != "student":
@@ -405,7 +443,7 @@ def teacher_submissions(request, assessment_id):
     submissions = Submission.objects.filter(assessment=assessment).order_by("-submitted_at")
 
     return render(request, "teacher_submissions.html", {
-        "assessment": assessment,
+        "assessment": assessment,   
         "submissions": submissions
     })
 

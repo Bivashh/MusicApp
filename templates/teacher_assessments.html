@@ -5,45 +5,65 @@
   <title>Teacher Assessments</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gradient-to-r from-indigo-600 to-purple-600 min-h-screen">
-<div class="max-w-6xl mx-auto py-10 px-4">
-  <div class="flex items-center justify-between mb-8">
-    <h2 class="text-3xl font-bold text-white">Assessments</h2>
-    <div class="flex gap-3">
-      <a href="/teacher/assessments/create/" class="px-5 py-2 bg-white text-indigo-700 rounded-xl font-semibold hover:bg-gray-100">+ Create</a>
-      <a href="/teacher/dashboard/" class="px-5 py-2 bg-white/10 text-white rounded-xl font-semibold hover:bg-white/20">← Back</a>
+
+<body class="bg-stone-50 text-stone-800 min-h-screen">
+
+<nav class="bg-white/90 backdrop-blur border-b border-stone-200 sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/teacher/dashboard/" class="font-extrabold tracking-tight text-amber-900">🎵 Narajyoti Teacher</a>
+    <div class="flex gap-2">
+      <a href="/teacher/assessments/create/" class="px-4 py-2 rounded-full bg-amber-800 text-white hover:bg-amber-900 font-semibold">+ Create</a>
+      <a href="/teacher/dashboard/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">← Back</a>
+    </div>
+  </div>
+</nav>
+
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <div class="flex items-end justify-between mb-6">
+    <div>
+      <h2 class="text-3xl font-extrabold text-stone-900">Assessments</h2>
+      <p class="text-stone-600 mt-2">Create tasks and review student submissions with graphs & feedback.</p>
     </div>
   </div>
 
-  <div class="bg-white rounded-2xl shadow-lg p-6">
+  <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6 overflow-x-auto">
     <table class="w-full">
       <thead>
-        <tr class="text-left text-gray-600 border-b">
+        <tr class="text-left text-stone-600 border-b">
           <th class="py-3">Title</th>
           <th class="py-3">Class</th>
           <th class="py-3">Deadline</th>
+          <th class="py-3">Reference</th>
           <th class="py-3">Action</th>
         </tr>
       </thead>
       <tbody>
         {% for a in assessments %}
-        <tr class="border-b hover:bg-gray-50">
+        <tr class="border-b hover:bg-stone-50">
           <td class="py-4 font-semibold text-indigo-700">{{ a.title }}</td>
           <td class="py-4">{{ a.class_schedule.class_name }}</td>
           <td class="py-4">{{ a.deadline }}</td>
           <td class="py-4">
-            <a class="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
-               href="/teacher/assessments/{{ a.assessment_id }}/submissions/">
+            {% if a.reference_audio %}
+              <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold">Yes</span>
+            {% else %}
+              <span class="px-3 py-1 bg-stone-100 text-stone-700 rounded-full font-semibold">No</span>
+            {% endif %}
+          </td>
+          <td class="py-4">
+            <a href="/teacher/assessments/{{ a.assessment_id }}/submissions/"
+               class="px-4 py-2 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold">
               View Submissions
             </a>
           </td>
         </tr>
         {% empty %}
-        <tr><td class="py-6 text-center text-gray-500" colspan="4">No assessments yet.</td></tr>
+        <tr><td colspan="5" class="py-6 text-center text-stone-500">No assessments created yet.</td></tr>
         {% endfor %}
       </tbody>
     </table>
   </div>
 </div>
+
 </body>
 </html>

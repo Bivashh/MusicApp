@@ -1,29 +1,126 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Teacher Register</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Teacher Registration · Narajyoti Music School</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gradient-to-r from-green-500 to-emerald-600 min-h-screen flex items-center justify-center">
+<body class="bg-stone-50 min-h-screen text-stone-800">
 
-<div class="bg-white p-8 rounded-xl shadow-xl w-full max-w-md">
-  <h2 class="text-xl font-bold mb-6 text-center">Teacher Registration</h2>
+<!-- Top Bar -->
+<nav class="bg-white/90 backdrop-blur border-b border-stone-200 sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/" class="font-extrabold tracking-tight text-amber-900 flex items-center gap-2">
+      <span class="text-2xl">🎵</span> Narajyoti <span class="text-stone-400 font-semibold">Music School</span>
+    </a>
+    <div class="flex gap-2">
+      <a href="/login/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">
+        Login
+      </a>
+      <a href="/register/student/" class="px-4 py-2 rounded-full bg-amber-800 text-white hover:bg-amber-900 font-semibold">
+        Student Register
+      </a>
+    </div>
+  </div>
+</nav>
 
-  <form method="POST">
-    {% csrf_token %}
-    <input name="name" placeholder="Full Name" class="input">
-    <input name="email" placeholder="Email" class="input">
-    <input name="password" type="password" placeholder="Password" class="input">
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <div class="grid lg:grid-cols-2 gap-10 items-start">
 
-    <button class="btn-green">Register</button>
-  </form>
+    <!-- Left info -->
+    <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-8">
+      <h1 class="text-3xl md:text-4xl font-extrabold text-stone-900">Teacher Registration</h1>
+      <p class="text-stone-600 mt-3">
+        Join as an instructor at Narajyoti Music School and manage class schedules and assessments from your dashboard.
+      </p>
+
+      <div class="mt-8 grid gap-4">
+        <div class="p-5 rounded-2xl bg-stone-50 border border-stone-200">
+          <p class="font-bold text-stone-900">What you can do</p>
+          <ul class="mt-2 text-stone-600 space-y-2">
+            <li>• Create and manage classes</li>
+            <li>• Create assessments with reference audio</li>
+            <li>• View student submissions + feedback</li>
+          </ul>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-amber-50 border border-amber-200">
+          <p class="font-bold text-amber-900">Note</p>
+          <p class="text-amber-900/80 mt-2 text-sm">
+            This portal is for project demo purposes. Teacher verification can be added later if needed.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right form -->
+    <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-8">
+      <h2 class="text-2xl font-extrabold text-stone-900">Create your teacher account</h2>
+      <p class="text-stone-600 mt-2">Fill in the details below.</p>
+
+      <!-- Django messages -->
+      {% if messages %}
+        <div class="mt-4 space-y-2">
+          {% for message in messages %}
+            <div class="p-3 rounded-2xl border 
+                        {% if message.tags == 'error' %} bg-red-50 border-red-200 text-red-800
+                        {% else %} bg-emerald-50 border-emerald-200 text-emerald-800 {% endif %}">
+              {{ message }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <form method="POST" class="mt-6 space-y-4">
+        {% csrf_token %}
+
+        <div>
+          <label class="block text-sm font-semibold text-stone-700 mb-2">Full Name</label>
+          <input name="name" required
+                 class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                 placeholder="e.g. Bikash Shrestha"/>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-stone-700 mb-2">Email</label>
+          <input name="email" type="email" required
+                 class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                 placeholder="teacher@email.com"/>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-stone-700 mb-2">Phone</label>
+          <input name="phone" required
+                 class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                 placeholder="98XXXXXXXX"/>
+        </div>
+
+        <div>
+          <label class="block text-sm font-semibold text-stone-700 mb-2">Password</label>
+          <input name="password" type="password" required
+                 class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
+                 placeholder="Create a strong password"/>
+        </div>
+
+        <button class="w-full py-3 rounded-2xl bg-amber-800 text-white hover:bg-amber-900 font-semibold shadow-sm">
+          Register as Teacher
+        </button>
+
+        <p class="text-sm text-stone-500 text-center">
+          Already have an account?
+          <a href="/login/" class="text-amber-900 font-semibold hover:underline">Login</a>
+        </p>
+      </form>
+    </div>
+
+  </div>
 </div>
 
-<style>
-.input{width:100%;padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:12px}
-.btn-green{width:100%;background:#059669;color:white;padding:10px;border-radius:8px}
-</style>
+<footer class="border-t border-stone-200 py-8 text-center text-stone-400 text-sm">
+  © 2026 Narajyoti Music School
+</footer>
 
 </body>
 </html>

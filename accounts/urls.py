@@ -29,9 +29,12 @@ urlpatterns=[
     path("teacher/assessments/create/", views.teacher_create_assessment, name="teacher_create_assessment"),
     path("teacher/assessments/<int:assessment_id>/submissions/", views.teacher_submissions, name="teacher_submissions"),
     path("teacher/submission/<int:submission_id>/grade/", views.teacher_grade_submission, name="teacher_grade_submission"),
-
+    path("teacher/dashboard/", views.teacher_dashboard, name="teacher_dashboard"),
+    path("teacher/profile/", views.teacher_profile, name="teacher_profile"),
+    #path("teacher/classes/", views.teacher_classes, name="teacher_classes"),
     # Student
     path("student/assessments/", views.student_assessments, name="student_assessments"),
     path("student/assessments/<int:assessment_id>/submit/", views.student_submit_assessment, name="student_submit_assessment"),
     path("student/results/", views.student_results, name="student_results"),
+    path("logout/", views.logout_view, name="logout"),
 ]
