@@ -10,6 +10,7 @@ from django.http import HttpResponse
 from django.conf import settings
 from django.utils import timezone
 from .audio_ai import analyze_audio
+from .gemini_feedback import generate_gemini_feedback
 
 
 def home(request):
@@ -474,7 +475,7 @@ def student_submit_assessment(request, assessment_id):
                 comment=comment
             )
 
-        # ✅ Auto feedback (only if teacher uploaded reference audio)
+        # Auto feedback (only if teacher uploaded reference audio)
         if a.reference_audio:
             ref_path = a.reference_audio.path
             stu_path = submission_obj.student_audio.path
@@ -485,6 +486,20 @@ def student_submit_assessment(request, assessment_id):
             submission_obj.rhythm_score = result["rhythm_score"]
             submission_obj.auto_score = result["auto_score"]
             submission_obj.auto_feedback = result["feedback"]
+
+            # Gemini dynamic feedback
+            try:
+                submission_obj.ai_feedback = generate_gemini_feedback(
+                    title=a.title,
+                    pitch_score=result["pitch_score"],
+                    rhythm_score=result["rhythm_score"],
+                    auto_score=result["auto_score"],
+                )
+            except Exception as e:
+                print("GEMINI ERROR:", e)
+                submission_obj.ai_feedback = None
+
+            # ✅ THIS WAS MISSING
             submission_obj.save()
 
         return redirect("/student/assessments/")

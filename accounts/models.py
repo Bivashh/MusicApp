@@ -105,6 +105,7 @@ class Submission(models.Model):
     pitch_score = models.FloatField(null=True, blank=True)
     rhythm_score = models.FloatField(null=True, blank=True)
     auto_feedback = models.TextField(null=True, blank=True)
+    ai_feedback = models.TextField(null=True, blank=True)
 
     class Meta:
         unique_together = ("assessment", "student")  # 1 submission per student per assessment
