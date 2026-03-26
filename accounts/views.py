@@ -2,6 +2,7 @@ from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
 from .models import Student, Teacher, ClassSchedule, Payment, Assessment, Submission
+import random
 import bcrypt
 import requests
 from django.conf import settings
@@ -12,6 +13,7 @@ from django.utils import timezone
 from .audio_ai import analyze_audio
 from .gemini_feedback import generate_gemini_feedback
 from .graph_utils import generate_pitch_plot , generate_rhythm_plot
+from django.core.mail import send_mail
 
 def home(request):
     return render(request, "home.html")
@@ -104,57 +106,152 @@ def logout_view(request):
 
 
 def student_register(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        phone = request.POST['phone']
-        password = request.POST['password']
+    if request.method == "POST":
+        name = request.POST["name"]
+        email = request.POST["email"]
+        phone = request.POST.get("phone", "")
+        password = request.POST["password"]
 
         if Student.objects.filter(email=email).exists():
             messages.error(request, "Email already registered")
-            return redirect('student_register')
+            return redirect("student_register")
 
         hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        otp = str(random.randint(100000, 999999))
 
         Student.objects.create(
             full_name=name,
             email=email,
             phone=phone,
             password=hashed,
-            is_verified=True   
+            otp=otp,
+            is_verified=False
         )
 
-        messages.success(request, "Student registered successfully")
-        return redirect('login')
+        send_mail(
+            subject="Narajyoti Music School - OTP Verification",
+            message=f"Your OTP is: {otp}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
 
-    return render(request, 'student_register.html')
+        request.session["verify_email"] = email
+        request.session["verify_role"] = "student"
+
+        messages.success(request, "OTP sent to your email. Please verify.")
+        return redirect("verify_otp")
+
+    return render(request, "student_register.html")
 
 
 def teacher_register(request):
-    if request.method == 'POST':
-        name = request.POST['name']
-        email = request.POST['email']
-        phone = request.POST['phone']
-        password = request.POST['password']
+    if request.method == "POST":
+        name = request.POST["name"]
+        email = request.POST["email"]
+        phone = request.POST["phone"]
+        password = request.POST["password"]
 
         if Teacher.objects.filter(email=email).exists():
             messages.error(request, "Email already registered")
-            return redirect('teacher_register')
+            return redirect("teacher_register")
 
         hashed = bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+        otp = str(random.randint(100000, 999999))
 
         Teacher.objects.create(
             full_name=name,
             email=email,
             phone=phone,
             password=hashed,
-            is_verified=True
+            otp=otp,
+            is_verified=False
         )
 
-        messages.success(request, "Teacher registered successfully")
-        return redirect('login')
+        send_mail(
+            subject="Narajyoti Music School - OTP Verification",
+            message=f"Your OTP is: {otp}",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[email],
+            fail_silently=False,
+        )
 
-    return render(request, 'teacher_register.html')
+        request.session["verify_email"] = email
+        request.session["verify_role"] = "teacher"
+
+        messages.success(request, "OTP sent to your email. Please verify.")
+        return redirect("verify_otp")
+
+    return render(request, "teacher_register.html")
+
+def verify_otp(request):
+    email = request.session.get("verify_email")
+    role = request.session.get("verify_role")
+
+    if not email or not role:
+        messages.error(request, "Verification session expired. Please register again.")
+        return redirect("/login/")
+
+    if request.method == "POST":
+        otp_input = request.POST.get("otp", "").strip()
+
+        if role == "student":
+            user = Student.objects.filter(email=email).first()
+        else:
+            user = Teacher.objects.filter(email=email).first()
+
+        if not user:
+            messages.error(request, "User not found.")
+            return redirect("/login/")
+
+        if user.otp == otp_input:
+            user.is_verified = True
+            user.otp = None
+            user.save()
+
+            request.session.pop("verify_email", None)
+            request.session.pop("verify_role", None)
+
+            messages.success(request, "Verified successfully! You can login now.")
+            return redirect("/login/")
+        else:
+            messages.error(request, "Invalid OTP. Try again.")
+
+    return render(request, "verify_otp.html")
+
+
+def resend_otp(request):
+    email = request.session.get("verify_email")
+    role = request.session.get("verify_role")
+
+    if not email or not role:
+        messages.error(request, "Verification session expired.")
+        return redirect("/login/")
+
+    otp = str(random.randint(100000, 999999))
+
+    if role == "student":
+        user = Student.objects.filter(email=email).first()
+    else:
+        user = Teacher.objects.filter(email=email).first()
+
+    if not user:
+        messages.error(request, "User not found.")
+        return redirect("/login/")
+
+    user.otp = otp
+    user.save()
+
+    send_mail(
+        subject="Narajyoti Music School - OTP Resend",
+        message=f"Your new OTP is: {otp}",
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[email],
+        fail_silently=False,
+    )
+
+    messages.success(request, "New OTP sent to your email.")
+    return redirect("verify_otp")
 
 def loginPage(request):
     if request.method == 'POST':

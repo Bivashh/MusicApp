@@ -37,4 +37,7 @@ urlpatterns=[
     path("student/assessments/<int:assessment_id>/submit/", views.student_submit_assessment, name="student_submit_assessment"),
     path("student/results/", views.student_results, name="student_results"),
     path("logout/", views.logout_view, name="logout"),
+
+    path("verify-otp/", views.verify_otp, name="verify_otp"),
+    path("resend-otp/", views.resend_otp, name="resend_otp"),
 ]
