@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Notifications</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 min-h-screen text-stone-800">
+
+<nav class="bg-white/90 backdrop-blur border-b border-stone-200 sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <a href="/student/dashboard/" class="font-extrabold text-amber-900">🎵 Narajyoti Student</a>
+    <a href="/student/dashboard/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">← Back</a>
+  </div>
+</nav>
+
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <div class="flex items-end justify-between mb-6">
+    <div>
+      <h2 class="text-3xl font-extrabold text-stone-900">Notice Board</h2>
+      <p class="text-stone-600 mt-2">System notifications and updates from teachers.</p>
+    </div>
+    <div class="text-sm font-semibold text-stone-600">
+      Unread: <span class="text-amber-900">{{ unread_count }}</span>
+    </div>
+  </div>
+
+  <div class="space-y-4">
+    {% for n in notes %}
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div>
+            <p class="text-xs font-bold text-stone-500">{{ n.category }}</p>
+            <h3 class="text-xl font-extrabold text-stone-900 mt-1">{{ n.title }}</h3>
+            <p class="text-stone-600 mt-2">{{ n.message }}</p>
+            <p class="text-stone-400 text-sm mt-3">{{ n.created_at }}</p>
+          </div>
+          {% if not n.is_read %}
+            <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full font-semibold">NEW</span>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <div class="text-center text-stone-500 bg-white rounded-3xl border border-stone-200 p-10">
+        No notifications yet.
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+</body>
+</html>

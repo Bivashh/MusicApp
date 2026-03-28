@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .models import Student, Teacher, ClassSchedule, Payment, Assessment, Submission
+from .models import Student, Teacher, ClassSchedule, Payment, Assessment, Submission, Notification
 import random
 import bcrypt
 import requests
@@ -355,13 +355,19 @@ def create_class(request):
         teacher_id = request.session.get('user_id')
         teacher = Teacher.objects.get(teacher_id=teacher_id)
 
-        ClassSchedule.objects.create(
+        # ✅ store the created object in new_class
+        new_class = ClassSchedule.objects.create(
             teacher=teacher,
             class_name=class_name,
             date=date,
             start_time=start,
             end_time=end
         )
+
+        # ✅ notification 
+        title = "New Class Added"
+        msg = f"New class '{new_class.class_name}' scheduled on {new_class.date} from {new_class.start_time} to {new_class.end_time}. Check your dashboard for details."
+        notify_all_students(title, msg, category="CLASS", send_email=True, email_limit=5)
 
         return redirect('teacher_dashboard')
 
@@ -504,7 +510,6 @@ def teacher_create_assessment(request):
     tid = request.session.get("user_id")
     teacher = get_object_or_404(Teacher, teacher_id=tid)
 
-    # teacher's classes only
     classes = ClassSchedule.objects.filter(teacher=teacher).order_by("-date")
 
     if request.method == "POST":
@@ -516,7 +521,8 @@ def teacher_create_assessment(request):
 
         cls = get_object_or_404(ClassSchedule, schedule_id=schedule_id)
 
-        Assessment.objects.create(
+        # ✅ store created object in ass
+        ass = Assessment.objects.create(
             teacher=teacher,
             class_schedule=cls,
             title=title,
@@ -524,6 +530,10 @@ def teacher_create_assessment(request):
             deadline=deadline,
             reference_audio=ref_audio
         )
+
+        # ✅ notify all students (notice board + optional email)
+        msg = f"Assessment '{ass.title}' is available for class '{ass.class_schedule.class_name}'. Deadline: {ass.deadline}."
+        notify_all_students("New Assessment Posted", msg, category="ASSESSMENT", send_email=True, email_limit=5)
 
         return redirect("/teacher/assessments/")
 
@@ -577,7 +587,7 @@ def student_assessments(request):
     sid = request.session.get("user_id")
     student = get_object_or_404(Student, student_id=sid)
 
-    # simple: show all assessments (later you can filter by enrolled class)
+    # simple: show all assessments 
     assessments = Assessment.objects.all().order_by("-created_at")
 
     # map submission status
@@ -644,7 +654,7 @@ def student_submit_assessment(request, assessment_id):
 
             # ---- Gemini dynamic feedback ----
             try:
-                # Only call Gemini if we have scores computed
+                
                 if submission_obj.auto_score is not None:
                     submission_obj.ai_feedback = generate_gemini_feedback(
                         title=a.title,
@@ -683,3 +693,41 @@ def student_results(request):
 
     submissions = Submission.objects.filter(student=student).order_by("-submitted_at")
     return render(request, "student_results.html", {"submissions": submissions})
+
+def notify_all_students(title, message, category="GENERAL", send_email=False, email_limit=5):
+    students = Student.objects.all()
+
+    # system notice board (always)
+    Notification.objects.bulk_create([
+        Notification(student=s, title=title, message=message, category=category)
+        for s in students
+    ])
+
+    # email (optional + limit for demo)
+    if send_email:
+        for s in students[:email_limit]:
+            try:
+                send_mail(
+                    subject=f"Narajyoti Music School - {title}",
+                    message=f"Hi {s.full_name},\n\n{message}\n\nNarajyoti Music School",
+                    from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+                    recipient_list=[s.email],
+                    fail_silently=True,
+                )
+            except:
+                pass
+
+def student_notifications(request):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    notes = Notification.objects.filter(student=student).order_by("-created_at")
+    unread_count = notes.filter(is_read=False).count()
+
+    return render(request, "student_notifications.html", {
+        "notes": notes,
+        "unread_count": unread_count
+    })

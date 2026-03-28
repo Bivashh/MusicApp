@@ -114,3 +114,19 @@ class Submission(models.Model):
 
     def __str__(self):
         return f"{self.student.full_name} - {self.assessment.title}"
+    
+class Notification(models.Model):
+    notification_id = models.AutoField(primary_key=True)
+
+    # who sees it (student side)
+    student = models.ForeignKey(Student, null=True, blank=True, on_delete=models.CASCADE)
+
+    title = models.CharField(max_length=200)
+    message = models.TextField()
+    category = models.CharField(max_length=30, default="GENERAL")  # CLASS, ASSESSMENT, RESULT, PAYMENT, GENERAL
+
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title
