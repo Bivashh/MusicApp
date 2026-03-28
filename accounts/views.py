@@ -458,6 +458,9 @@ def khalti_initiate(request, payment_id):
 
 
 def khalti_return(request):
+
+    ADMIN_EMAIL = "nu5810152@gmail.com"
+
     pidx = request.GET.get("pidx")
     if not pidx:
         return HttpResponse("Missing pidx.")
@@ -481,7 +484,29 @@ def khalti_return(request):
     payment.khalti_transaction_id = info.get("transaction_id")
 
     if final_status == "Completed":
+        # ✅ email admin only once
+        if payment.status != "PAID":
+            try:
+                send_mail(
+                    subject="Narajyoti Music School - Payment Received",
+                    message=(
+                        f"Payment received.\n\n"
+                        f"Student: {payment.student.full_name}\n"
+                        f"Email: {payment.student.email}\n"
+                        f"Phone: {payment.student.phone}\n"
+                        f"Amount: Rs {payment.amount}\n"
+                        f"Order: {payment.purchase_order_name} (ID: {payment.purchase_order_id})\n"
+                        f"Transaction ID: {payment.khalti_transaction_id}\n"
+                    ),
+                    from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+                    recipient_list=[ADMIN_EMAIL],
+                    fail_silently=True,
+                )
+            except Exception as e:
+                print("ADMIN EMAIL ERROR:", e)
+
         payment.status = "PAID"
+
     elif final_status == "Pending":
         payment.status = "PENDING"
     elif final_status == "User canceled":
@@ -563,7 +588,8 @@ def teacher_grade_submission(request, submission_id):
     teacher = get_object_or_404(Teacher, teacher_id=tid)
 
     submission = get_object_or_404(Submission, submission_id=submission_id)
-    # safety: teacher must own this assessment
+
+    
     if submission.assessment.teacher.teacher_id != teacher.teacher_id:
         return redirect("/teacher/assessments/")
 
@@ -575,6 +601,31 @@ def teacher_grade_submission(request, submission_id):
         submission.feedback = feedback
         submission.graded_at = timezone.now()
         submission.save()
+
+        #  notification to student
+        Notification.objects.create(
+            student=submission.student,
+            title="Assessment Graded",
+            message=f"Your submission for '{submission.assessment.title}' has been graded. Check Results to view feedback.",
+            category="RESULT"
+        )
+
+        #  optional email (
+        try:
+            send_mail(
+                subject="Narajyoti Music School - Result Published",
+                message=(
+                    f"Hi {submission.student.full_name},\n\n"
+                    f"Your submission for '{submission.assessment.title}' has been graded.\n"
+                    f"Login to view your score and feedback.\n\n"
+                    f"Narajyoti Music School"
+                ),
+                from_email=getattr(settings, "DEFAULT_FROM_EMAIL", None),
+                recipient_list=[submission.student.email],
+                fail_silently=True,
+            )
+        except Exception as e:
+            print("EMAIL ERROR:", e)
 
         return redirect(f"/teacher/assessments/{submission.assessment.assessment_id}/submissions/")
 
