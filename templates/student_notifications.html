@@ -2,51 +2,184 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Notifications</title>
+  <title>Notifications · Narajyoti Music School</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            green: {
+              50:  '#f4f8f3',
+              100: '#eef4ec',
+              200: '#c8dac3',
+              300: '#7a9e6f',
+              400: '#5c7f52',
+              500: '#4a6741',
+              600: '#3d5636',
+            },
+            cream: {
+              50:  '#fdfaf5',
+              100: '#f9f5ee',
+              200: '#f3ede2',
+              300: '#ede4d6',
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(28, 25, 23, 0.08)',
+            glow: '0 18px 50px rgba(74, 103, 65, 0.16)',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-stone-50 min-h-screen text-stone-800">
 
-<nav class="bg-white/90 backdrop-blur border-b border-stone-200 sticky top-0 z-40">
-  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-    <a href="/student/dashboard/" class="font-extrabold text-amber-900">🎵 Narajyoti Student</a>
-    <a href="/student/dashboard/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">← Back</a>
-  </div>
-</nav>
+<body class="bg-cream-100 min-h-screen text-stone-800 font-sans antialiased">
 
-<div class="max-w-6xl mx-auto px-4 py-10">
-  <div class="flex items-end justify-between mb-6">
-    <div>
-      <h2 class="text-3xl font-extrabold text-stone-900">Notice Board</h2>
-      <p class="text-stone-600 mt-2">System notifications and updates from teachers.</p>
-    </div>
-    <div class="text-sm font-semibold text-stone-600">
-      Unread: <span class="text-amber-900">{{ unread_count }}</span>
-    </div>
-  </div>
-
-  <div class="space-y-4">
-    {% for n in notes %}
-      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6">
-        <div class="flex items-start justify-between gap-4">
-          <div>
-            <p class="text-xs font-bold text-stone-500">{{ n.category }}</p>
-            <h3 class="text-xl font-extrabold text-stone-900 mt-1">{{ n.title }}</h3>
-            <p class="text-stone-600 mt-2">{{ n.message }}</p>
-            <p class="text-stone-400 text-sm mt-3">{{ n.created_at }}</p>
-          </div>
-          {% if not n.is_read %}
-            <span class="px-3 py-1 bg-amber-100 text-amber-800 rounded-full font-semibold">NEW</span>
-          {% endif %}
+  <!-- CONSISTENT STUDENT NAVBAR -->
+  <nav class="sticky top-0 z-40 border-b border-cream-300 bg-cream-100/90 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-green-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-green-500/20">
+          🎵
+        </div>
+        <div>
+          <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
+          <p class="text-[10px] font-bold text-stone-400 tracking-[0.18em] uppercase mt-1">Music School</p>
         </div>
       </div>
-    {% empty %}
-      <div class="text-center text-stone-500 bg-white rounded-3xl border border-stone-200 p-10">
-        No notifications yet.
+
+      <div class="flex flex-wrap gap-3">
+        <a href="/student/dashboard/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+          Dashboard
+        </a>
+        <a href="/student/profile/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+          My Profile
+        </a>
+        <a href="/student/assessments/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+          Assessments
+        </a>
+        <a href="/student/results/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+          Results
+        </a>
+        <a href="{% url 'student_payment' %}" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+          Payments
+        </a>
+        <a href="/student/notifications/" class="px-4 py-2.5 rounded-full bg-green-500 text-white hover:bg-green-400 font-semibold transition-all shadow-lg shadow-green-500/20">
+          Notifications
+        </a>
       </div>
-    {% endfor %}
-  </div>
-</div>
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto px-5 md:px-8 py-8 md:py-10 space-y-8">
+
+    <!-- HERO -->
+    <section class="relative overflow-hidden rounded-[2rem] border border-green-200 bg-gradient-to-br from-green-600 via-green-500 to-green-400 text-white shadow-glow">
+      <div class="absolute top-0 right-0 w-72 h-72 bg-white/10 rounded-full blur-3xl -translate-y-1/3 translate-x-1/4"></div>
+      <div class="absolute bottom-0 left-0 w-56 h-56 bg-white/10 rounded-full blur-3xl translate-y-1/3 -translate-x-1/4"></div>
+
+      <div class="relative z-10 p-8 md:p-10 lg:p-12 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
+        <div>
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 border border-white/20 mb-5">
+            <div class="w-2 h-2 rounded-full bg-green-100"></div>
+            <span class="text-[11px] font-bold tracking-[0.18em] uppercase text-green-50">Student Portal</span>
+          </div>
+
+          <p class="text-green-100 text-sm font-semibold tracking-wide">Updates & Announcements</p>
+          <h1 class="mt-2 font-serif text-4xl md:text-5xl leading-tight">Notice Board</h1>
+          <p class="text-green-100/95 mt-4 max-w-2xl text-base md:text-lg leading-relaxed">
+            Stay updated with system notifications, teacher announcements, and important portal messages.
+          </p>
+        </div>
+
+        <div class="rounded-3xl border border-white/20 bg-white/10 backdrop-blur p-5 min-w-[220px]">
+          <p class="text-xs font-bold uppercase tracking-[0.18em] text-green-100">Unread Messages</p>
+          <p class="mt-3 text-3xl font-bold text-white">{{ unread_count }}</p>
+          <p class="mt-2 text-sm text-green-100">Notifications waiting for your attention.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTIFICATIONS LIST -->
+    <section class="space-y-4">
+      <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+        <div>
+          <p class="text-xs font-bold tracking-[0.18em] uppercase text-green-500">Notification Center</p>
+          <h2 class="font-serif text-3xl text-stone-900 mt-2">Latest Updates</h2>
+          <p class="text-stone-500 mt-2">All your recent messages from the portal and teachers.</p>
+        </div>
+
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-cream-300 text-sm font-semibold text-stone-700 shadow-sm">
+          <span class="w-2.5 h-2.5 rounded-full bg-green-500"></span>
+          Unread: <span class="text-green-500 font-bold">{{ unread_count }}</span>
+        </div>
+      </div>
+
+      {% for n in notes %}
+        <div class="bg-white rounded-[1.75rem] border border-cream-300 shadow-soft p-6 hover:shadow-lg transition-all">
+          <div class="flex items-start justify-between gap-4">
+            <div class="flex-1">
+              <div class="flex flex-wrap items-center gap-3 mb-3">
+                <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 border border-green-200 text-xs font-bold tracking-[0.15em] uppercase text-green-500">
+                  {{ n.category }}
+                </span>
+
+                {% if not n.is_read %}
+                  <span class="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-xs font-bold tracking-[0.15em] uppercase text-amber-700">
+                    New
+                  </span>
+                {% endif %}
+              </div>
+
+              <h3 class="text-2xl font-bold text-stone-900">{{ n.title }}</h3>
+              <p class="text-stone-600 mt-3 leading-relaxed">{{ n.message }}</p>
+              <p class="text-stone-400 text-sm mt-4">{{ n.created_at }}</p>
+            </div>
+
+            <div class="w-12 h-12 rounded-2xl bg-green-100 border border-green-200 flex items-center justify-center text-xl shrink-0">
+              🔔
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="text-center text-stone-500 bg-white rounded-[1.75rem] border border-cream-300 p-12 shadow-soft">
+          <div class="w-16 h-16 mx-auto rounded-3xl bg-green-100 border border-green-200 flex items-center justify-center text-2xl mb-5">
+            🔔
+          </div>
+          <h3 class="text-2xl font-bold text-stone-900">No notifications yet</h3>
+          <p class="mt-2">New updates and announcements will appear here.</p>
+        </div>
+      {% endfor %}
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-10 border-t border-green-200 bg-green-500">
+    <div class="max-w-7xl mx-auto px-5 md:px-8 py-8 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="text-center md:text-left">
+        <div class="font-serif text-2xl text-white leading-none">Narajyoti</div>
+        <div class="text-green-200 text-xs font-bold tracking-[0.18em] uppercase mt-1">Music School</div>
+      </div>
+
+      <div class="text-green-100 text-sm text-center">
+        Student Notifications Portal
+      </div>
+
+      <div class="text-green-200 text-xs tracking-[0.18em] uppercase text-center">
+        Learn · Practice · Perform
+      </div>
+    </div>
+  </footer>
 
 </body>
 </html>

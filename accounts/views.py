@@ -506,7 +506,7 @@ def khalti_return(request):
                 print("ADMIN EMAIL ERROR:", e)
 
         payment.status = "PAID"
-
+ 
     elif final_status == "Pending":
         payment.status = "PENDING"
     elif final_status == "User canceled":

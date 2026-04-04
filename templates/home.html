@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,435 +6,672 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Narajyoti Music School</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            green: {
+              50:  '#f4f8f3',
+              100: '#eef4ec',
+              200: '#c8dac3',
+              300: '#7a9e6f',
+              400: '#5c7f52',
+              500: '#4a6741',
+              600: '#3d5636',
+            },
+            cream: {
+              50:  '#fdfaf5',
+              100: '#f9f5ee',
+              200: '#f3ede2',
+              300: '#ede4d6',
+            }
+          },
+          animation: {
+            'marquee': 'marquee 30s linear infinite',
+            'float': 'float 4s ease-in-out infinite',
+            'fade-up': 'fadeUp 0.6s ease forwards',
+          },
+          keyframes: {
+            marquee: {
+              '0%': { transform: 'translateX(0)' },
+              '100%': { transform: 'translateX(-50%)' },
+            },
+            float: {
+              '0%, 100%': { transform: 'translateY(0px)' },
+              '50%': { transform: 'translateY(-10px)' },
+            },
+            fadeUp: {
+              '0%': { opacity: '0', transform: 'translateY(24px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
   <style>
     html { scroll-behavior: smooth; }
-    * { scroll-margin-top: 92px; }
-    .hover-lift { transition: transform .2s ease, box-shadow .2s ease; }
-    .hover-lift:hover { transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.08), 0 10px 10px -5px rgba(0,0,0,0.04); }
-    .faq-answer { transition: max-height 0.35s ease, opacity 0.2s ease; }
+    * { scroll-margin-top: 72px; }
+    .fade-up-hidden { opacity: 0; transform: translateY(28px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .fade-up-hidden.visible { opacity: 1; transform: translateY(0); }
+    .course-underline { position: relative; overflow: hidden; }
+    .course-underline::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(to right, #4a6741, #7a9e6f); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; border-radius: 0 0 16px 16px; }
+    .course-underline:hover::after { transform: scaleX(1); }
   </style>
 </head>
 
-<body class="bg-stone-50 text-stone-800 font-sans antialiased">
+<body class="bg-cream-100 font-sans text-stone-800 antialiased overflow-x-hidden">
 
-<!-- NAVBAR -->
-<nav class="fixed top-0 w-full bg-white/85 backdrop-blur border-b border-stone-200/80 z-50">
-  <div class="max-w-6xl mx-auto px-5 md:px-8 py-4 flex items-center justify-between">
-    <a href="#home" class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center">
-        <span class="text-xl">🎵</span>
-      </div>
-      <div class="leading-tight">
-        <div class="text-lg font-extrabold tracking-tight text-amber-900">Narajyoti</div>
-        <div class="text-xs font-semibold text-stone-500 -mt-0.5">Music School</div>
-      </div>
-    </a>
-
-    <!-- Desktop -->
-    <div class="hidden md:flex items-center gap-8 text-stone-600 font-medium">
-      <a href="#about" class="hover:text-amber-700">About</a>
-      <a href="#courses" class="hover:text-amber-700">Courses</a>
-      <a href="#system" class="hover:text-amber-700">System</a>
-      <a href="#faq" class="hover:text-amber-700">FAQ</a>
-      <a href="#contact" class="hover:text-amber-700">Contact</a>
+<!-- NAV -->
+<nav id="navbar" class="fixed top-0 w-full z-50 h-[72px] flex items-center justify-between px-6 md:px-12 transition-all duration-300 bg-cream-100/90 backdrop-blur-md">
+  <a href="#home" class="flex items-center gap-3">
+    <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center text-lg shrink-0">🎵</div>
+    <div>
+      <div class="font-serif text-xl font-bold text-green-500 leading-none">Narajyoti</div>
+      <div class="text-[10px] font-bold text-stone-400 tracking-[0.15em] uppercase mt-0.5">Music School</div>
     </div>
+  </a>
 
-    <div class="hidden md:flex items-center gap-2">
-      <a href="/panel/login/" class="px-4 py-2 rounded-full border border-stone-300 hover:border-amber-500 hover:bg-white transition">
-        Admin Login
-      </a>
-      <a href="#access" class="px-5 py-2 rounded-full bg-amber-800 text-white hover:bg-amber-900 transition shadow-sm font-semibold">
-        Student/Teacher Portal
-      </a>
-    </div>
+  <ul class="hidden md:flex gap-8 list-none m-0 p-0">
+    <li><a href="#about"   class="text-stone-500 hover:text-green-500 text-sm font-semibold transition-colors">About</a></li>
+    <li><a href="#courses" class="text-stone-500 hover:text-green-500 text-sm font-semibold transition-colors">Courses</a></li>
+    <li><a href="#system"  class="text-stone-500 hover:text-green-500 text-sm font-semibold transition-colors">Portal</a></li>
+    <li><a href="#faq"     class="text-stone-500 hover:text-green-500 text-sm font-semibold transition-colors">FAQ</a></li>
+    <li><a href="#contact" class="text-stone-500 hover:text-green-500 text-sm font-semibold transition-colors">Contact</a></li>
+  </ul>
 
-    <!-- Mobile -->
-    <button id="menuBtn" class="md:hidden p-2 rounded-lg hover:bg-stone-100" aria-label="menu">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="w-7 h-7 text-stone-700">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-      </svg>
-    </button>
+  <div class="hidden md:flex items-center gap-3">
+    <a href="/panel/login/" class="px-5 py-2 rounded-full border-2 border-green-200 text-green-500 text-sm font-bold hover:border-green-500 hover:bg-green-100 transition-all">Admin</a>
+    <a href="#access" class="px-5 py-2 rounded-full bg-green-500 text-white text-sm font-bold hover:bg-green-400 transition-all">Student / Teacher →</a>
   </div>
 
-  <div id="mobileMenu" class="md:hidden hidden bg-white border-t border-stone-200 px-5 py-4 shadow-lg">
-    <div class="flex flex-col gap-3 text-base font-medium text-stone-700">
-      <a href="#about" class="py-2 hover:text-amber-700" onclick="toggleMobile()">About</a>
-      <a href="#courses" class="py-2 hover:text-amber-700" onclick="toggleMobile()">Courses</a>
-      <a href="#system" class="py-2 hover:text-amber-700" onclick="toggleMobile()">System</a>
-      <a href="#faq" class="py-2 hover:text-amber-700" onclick="toggleMobile()">FAQ</a>
-      <a href="#contact" class="py-2 hover:text-amber-700" onclick="toggleMobile()">Contact</a>
-
-      <div class="pt-2 flex flex-col gap-3">
-        <a href="/panel/login/" class="py-2 rounded-full border border-stone-300 text-center hover:border-amber-500 hover:bg-stone-50" onclick="toggleMobile()">
-          Admin Login
-        </a>
-        <a href="#access" class="py-2 rounded-full bg-amber-800 text-white text-center hover:bg-amber-900 font-semibold" onclick="toggleMobile()">
-          Student/Teacher Portal
-        </a>
-      </div>
-    </div>
-  </div>
+  <button id="hamburger" class="md:hidden flex flex-col gap-1.5 p-1 bg-transparent border-none cursor-pointer">
+    <span class="block w-6 h-0.5 bg-stone-700 rounded transition-all"></span>
+    <span class="block w-6 h-0.5 bg-stone-700 rounded transition-all"></span>
+    <span class="block w-6 h-0.5 bg-stone-700 rounded transition-all"></span>
+  </button>
 </nav>
 
-<main class="pt-28 md:pt-32">
+<!-- MOBILE MENU -->
+<div id="mobileMenu" class="hidden fixed top-[72px] left-0 right-0 z-40 bg-cream-100 border-b border-cream-300 shadow-lg px-6 py-5 flex-col gap-4">
+  <a href="#about"   onclick="closeMobile()" class="text-stone-700 font-semibold text-base py-2 border-b border-cream-300 block">About</a>
+  <a href="#courses" onclick="closeMobile()" class="text-stone-700 font-semibold text-base py-2 border-b border-cream-300 block">Courses</a>
+  <a href="#system"  onclick="closeMobile()" class="text-stone-700 font-semibold text-base py-2 border-b border-cream-300 block">Portal</a>
+  <a href="#faq"     onclick="closeMobile()" class="text-stone-700 font-semibold text-base py-2 border-b border-cream-300 block">FAQ</a>
+  <a href="#contact" onclick="closeMobile()" class="text-stone-700 font-semibold text-base py-2 border-b border-cream-300 block">Contact</a>
+  <div class="flex flex-col gap-3 pt-2">
+    <a href="/panel/login/" class="text-center px-5 py-2.5 rounded-full border-2 border-green-200 text-green-500 font-bold text-sm hover:bg-green-100 transition-all">Admin Login</a>
+    <a href="#access" onclick="closeMobile()" class="text-center px-5 py-2.5 rounded-full bg-green-500 text-white font-bold text-sm hover:bg-green-400 transition-all">Student / Teacher →</a>
+  </div>
+</div>
 
-  <!-- HERO -->
-  <section id="home" class="max-w-6xl mx-auto px-5 md:px-8">
-    <div class="grid md:grid-cols-2 gap-12 items-center">
-      <div class="space-y-6 text-center md:text-left">
-        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-amber-200 bg-amber-50 text-amber-800 font-semibold text-sm">
-          🎶 Learn • Practice • Perform
-        </span>
+<!-- HERO -->
+<section id="home" class="min-h-screen grid md:grid-cols-2 pt-[72px] relative overflow-hidden">
+  <!-- bg blobs -->
+  <div class="absolute top-0 right-0 w-[500px] h-[500px] rounded-full bg-green-100 opacity-60 blur-3xl pointer-events-none -translate-y-1/4 translate-x-1/4"></div>
+  <div class="absolute bottom-0 left-0 w-[350px] h-[350px] rounded-full bg-green-200 opacity-40 blur-3xl pointer-events-none translate-y-1/4 -translate-x-1/4"></div>
 
-        <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold leading-tight tracking-tight text-stone-900">
-          Build confidence in music,
-          <span class="text-amber-800">one lesson at a time.</span>
-        </h1>
+  <!-- Left -->
+  <div class="flex flex-col justify-center px-8 md:px-16 py-16 relative z-10">
+    <div class="inline-flex items-center gap-2 mb-8 w-fit px-3 py-1.5 bg-green-100 border border-green-200 rounded-full">
+      <div class="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center text-xs">🎶</div>
+      <span class="text-green-500 text-xs font-bold tracking-widest uppercase">Kathmandu, Nepal</span>
+    </div>
 
-        <p class="text-lg md:text-xl text-stone-600 max-w-xl mx-auto md:mx-0">
-          Welcome to Narajyoti Music School — a supportive place for vocals and instruments.
-          Our system helps students and teachers stay organized with schedules, fees, and progress.
+    <h1 class="font-serif text-5xl md:text-6xl lg:text-7xl font-400 leading-[1.08] text-stone-900 mb-6">
+      Where music<br>finds its
+      <em class="text-green-500 not-italic font-serif italic"> voice.</em>
+    </h1>
+
+    <p class="text-stone-500 text-lg font-400 leading-relaxed max-w-md mb-10">
+      Narajyoti Music School offers structured, encouraging lessons in vocals and instruments — plus a portal to track schedules, fees, and progress.
+    </p>
+
+    <div class="flex flex-wrap gap-3 mb-12">
+      <a href="#courses" class="inline-flex items-center gap-2 px-7 py-3.5 bg-green-500 text-white rounded-full text-base font-bold hover:bg-green-400 transition-all hover:-translate-y-0.5 shadow-lg shadow-green-500/20">
+        Explore Courses →
+      </a>
+      <a href="#access" class="inline-flex items-center gap-2 px-7 py-3.5 border-2 border-green-200 text-green-500 rounded-full text-base font-semibold hover:border-green-500 hover:bg-green-100 transition-all">
+        Enter Portal
+      </a>
+    </div>
+
+    <div class="flex flex-wrap gap-3">
+      <div class="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-300 rounded-2xl text-sm font-semibold text-stone-600 shadow-sm">🎤 Vocals</div>
+      <div class="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-300 rounded-2xl text-sm font-semibold text-stone-600 shadow-sm">🎸 Guitar</div>
+      <div class="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-300 rounded-2xl text-sm font-semibold text-stone-600 shadow-sm">🎹 Keyboard</div>
+      <div class="flex items-center gap-2 px-4 py-2.5 bg-white border border-cream-300 rounded-2xl text-sm font-semibold text-stone-600 shadow-sm">🥁 Rhythm</div>
+    </div>
+  </div>
+
+  <!-- Right — hero card -->
+  <div class="hidden md:flex items-center justify-center px-12 py-16 relative z-10">
+    <div class="relative w-full max-w-[400px]">
+      <!-- Badge -->
+      <div class="absolute -top-4 right-6 bg-cream-200 border border-cream-300 rounded-full px-4 py-1.5 text-xs font-bold text-stone-500 shadow-sm z-20">
+        📍 Kathmandu, Nepal
+      </div>
+
+      <!-- Main card -->
+      <div class="bg-white border border-cream-300 rounded-3xl p-10 shadow-xl shadow-stone-200/60 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-40 h-40 bg-green-50 rounded-bl-full pointer-events-none"></div>
+        <span class="text-6xl mb-6 block leading-none">🎼</span>
+        <div class="inline-block px-3 py-1 bg-green-100 border border-green-200 rounded-full text-xs font-bold text-green-500 tracking-widest uppercase mb-3">Enroll Now</div>
+        <div class="font-serif text-2xl font-500 text-stone-800 leading-snug mb-5">Guided lessons for every level of learner</div>
+        <div class="flex flex-wrap gap-2">
+          <span class="px-3 py-1.5 bg-cream-100 border border-cream-300 rounded-full text-xs font-semibold text-stone-500">🎤 Vocals</span>
+          <span class="px-3 py-1.5 bg-cream-100 border border-cream-300 rounded-full text-xs font-semibold text-stone-500">🎸 Guitar</span>
+          <span class="px-3 py-1.5 bg-cream-100 border border-cream-300 rounded-full text-xs font-semibold text-stone-500">🎹 Keys</span>
+          <span class="px-3 py-1.5 bg-cream-100 border border-cream-300 rounded-full text-xs font-semibold text-stone-500">🥁 Rhythm</span>
+          <span class="px-3 py-1.5 bg-cream-100 border border-cream-300 rounded-full text-xs font-semibold text-stone-500">📚 Beginner</span>
+        </div>
+      </div>
+
+      <!-- Floating card -->
+      <div class="absolute -bottom-5 -left-8 bg-green-500 rounded-2xl px-5 py-4 flex items-center gap-3 shadow-xl shadow-green-500/30 animate-float min-w-[190px]">
+        <span class="text-2xl">📅</span>
+        <div>
+          <div class="text-[10px] font-bold text-green-200 tracking-widest uppercase">Next Class</div>
+          <div class="font-serif text-white text-base font-500 mt-0.5">Today, 4:00 PM</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="border-y border-green-200 bg-green-100 overflow-hidden py-3.5">
+  <div class="flex w-max animate-marquee whitespace-nowrap">
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Vocal Training <span class="text-green-300">♩</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Guitar Lessons <span class="text-green-300">♪</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Keyboard Practice <span class="text-green-300">♫</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Rhythm Exercises <span class="text-green-300">♬</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Song Coaching <span class="text-green-300">♩</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Fee Tracking <span class="text-green-300">♪</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Class Schedules <span class="text-green-300">♫</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Beginner Friendly <span class="text-green-300">♬</span></span>
+    <!-- duplicate for seamless loop -->
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Vocal Training <span class="text-green-300">♩</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Guitar Lessons <span class="text-green-300">♪</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Keyboard Practice <span class="text-green-300">♫</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Rhythm Exercises <span class="text-green-300">♬</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Song Coaching <span class="text-green-300">♩</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Fee Tracking <span class="text-green-300">♪</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Class Schedules <span class="text-green-300">♫</span></span>
+    <span class="inline-flex items-center gap-3 px-8 text-xs font-bold tracking-widest text-green-400 uppercase">Beginner Friendly <span class="text-green-300">♬</span></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about" class="py-24 bg-cream-100">
+  <div class="max-w-6xl mx-auto px-6 md:px-12">
+    <div class="grid md:grid-cols-2 gap-16 items-start">
+
+      <div class="fade-up-hidden">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-0.5 bg-green-500 rounded"></div>
+          <span class="text-green-500 text-xs font-bold tracking-[0.2em] uppercase">About Narajyoti</span>
+        </div>
+        <h2 class="font-serif text-4xl md:text-5xl font-400 text-stone-900 leading-tight mb-6">
+          Guided growth,<br><em class="italic text-green-500">note by note.</em>
+        </h2>
+        <p class="text-stone-500 text-lg leading-relaxed font-400 mb-8">
+          Narajyoti Music School was built around one belief — that every student grows when given the right structure, honest feedback, and an encouraging space to learn. We focus on steady, visible improvement in technique, rhythm, and performance confidence.
         </p>
-
-        <div class="flex flex-col sm:flex-row items-center gap-4 pt-2">
-          <a href="#courses" class="bg-amber-800 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-amber-900 shadow-md w-full sm:w-auto text-center">
-            Explore Courses →
-          </a>
-          <a href="#access" class="px-8 py-4 rounded-full text-lg font-semibold border border-stone-300 hover:border-amber-500 hover:bg-white w-full sm:w-auto text-center">
-            Student / Teacher Portal
-          </a>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 pt-4 max-w-md mx-auto md:mx-0">
-          <div class="p-4 rounded-2xl bg-white border border-stone-200 shadow-sm">
-            <p class="text-2xl font-extrabold text-stone-900">Vocals</p>
-            <p class="text-sm text-stone-500">Training</p>
-          </div>
-          <div class="p-4 rounded-2xl bg-white border border-stone-200 shadow-sm">
-            <p class="text-2xl font-extrabold text-stone-900">Guitar</p>
-            <p class="text-sm text-stone-500">Basics+</p>
-          </div>
-          <div class="p-4 rounded-2xl bg-white border border-stone-200 shadow-sm">
-            <p class="text-2xl font-extrabold text-stone-900">Keyboard</p>
-            <p class="text-sm text-stone-500">Practice</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex justify-center">
-        <div class="relative w-full max-w-md aspect-square rounded-3xl border border-stone-200 bg-gradient-to-br from-amber-100 via-stone-100 to-white shadow-xl flex items-center justify-center">
-          <div class="absolute top-6 left-6 text-stone-500 font-semibold text-sm bg-white/70 backdrop-blur px-3 py-1 rounded-full border border-stone-200">
-            Narajyoti Music School
-          </div>
-          <div class="text-7xl md:text-8xl">🎼🎹</div>
-          <div class="absolute bottom-6 right-6 text-stone-600 text-sm bg-white/70 backdrop-blur px-3 py-1 rounded-full border border-stone-200">
-            Schedules • Fees • Progress
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ABOUT -->
-  <section id="about" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
-    <div class="bg-white p-8 md:p-12 rounded-3xl shadow-sm border border-stone-200">
-      <div class="grid md:grid-cols-2 gap-10 items-start">
-        <div>
-          <span class="text-amber-700 font-semibold">About Us</span>
-          <h2 class="text-3xl md:text-4xl font-extrabold mt-3 text-stone-900">
-            A place to learn music with guidance and discipline.
-          </h2>
-          <p class="text-stone-600 text-lg leading-relaxed mt-4">
-            Narajyoti Music School focuses on steady improvement — technique, rhythm, confidence, and performance readiness.
-            We create a supportive environment where students enjoy learning while progressing consistently.
-          </p>
-        </div>
-
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
-            <div class="text-3xl">✅</div>
-            <h3 class="text-xl font-bold mt-3">Structured Learning</h3>
-            <p class="text-stone-600 mt-2">Clear lesson plans and practice routines.</p>
-          </div>
-          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
-            <div class="text-3xl">🎤</div>
-            <h3 class="text-xl font-bold mt-3">Performance Focus</h3>
-            <p class="text-stone-600 mt-2">Build confidence to sing and play in front of others.</p>
-          </div>
-          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
-            <div class="text-3xl">🧠</div>
-            <h3 class="text-xl font-bold mt-3">Helpful Feedback</h3>
-            <p class="text-stone-600 mt-2">Guidance to improve pitch, rhythm, and technique.</p>
-          </div>
-          <div class="p-6 rounded-3xl bg-stone-50 border border-stone-200 hover-lift">
-            <div class="text-3xl">🤝</div>
-            <h3 class="text-xl font-bold mt-3">Supportive Environment</h3>
-            <p class="text-stone-600 mt-2">Friendly teaching with consistent encouragement.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- COURSES -->
-  <section id="courses" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900">Courses</h2>
-      <p class="text-stone-500 text-lg mt-3">Choose a path and grow your skills step by step.</p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">🎤</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Vocal Training</h3>
-        <p class="text-stone-600">Breath control, pitch accuracy, tone improvement, and performance confidence.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">🎸</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Guitar</h3>
-        <p class="text-stone-600">Chords, strumming patterns, rhythm control, and song practice.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">🎹</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Keyboard / Harmonium</h3>
-        <p class="text-stone-600">Notes, scales, accompaniment, and foundational music theory.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">🥁</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Rhythm Practice</h3>
-        <p class="text-stone-600">Timing, claps, counts, and rhythm exercises to strengthen musical accuracy.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">🎶</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Song Coaching</h3>
-        <p class="text-stone-600">Improve expression, confidence, and song performance for stage readiness.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">📚</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Beginner Foundation</h3>
-        <p class="text-stone-600">Perfect for beginners: basics, posture, practice habits, and improvement tracking.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- SYSTEM / FEATURES -->
-  <section id="system" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900">Student & Teacher Portal</h2>
-      <p class="text-stone-500 text-lg mt-3">A simple portal to keep learning organized.</p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">📅</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Class Schedules</h3>
-        <p class="text-stone-600">Teachers create schedules; students can view what’s available.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">💳</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Fees & Payments</h3>
-        <p class="text-stone-600">Track monthly fees with clear paid/pending status.</p>
-      </div>
-
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm hover-lift">
-        <span class="text-4xl">🧪</span>
-        <h3 class="text-2xl font-bold mt-4 mb-2">Assessments</h3>
-        <p class="text-stone-600">Students submit practice recordings and receive feedback (in progress).</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- ACCESS -->
-  <section id="access" class="max-w-6xl mx-auto px-5 md:px-8 mt-24">
-    <div class="bg-gradient-to-br from-amber-900 to-amber-800 text-white p-10 md:p-12 rounded-[2.5rem] shadow-2xl">
-      <div class="grid md:grid-cols-2 gap-10 items-center">
-        <div>
-          <h2 class="text-3xl md:text-4xl font-extrabold">Access the Portal</h2>
-          <p class="text-amber-100 text-lg mt-3">
-            Register or login to manage classes, payments, and progress.
-          </p>
-          <div class="flex flex-wrap gap-3 mt-6">
-            <a href="/login/" class="bg-white text-amber-900 px-6 py-3 rounded-full font-semibold hover:bg-amber-50">
-              Student/Teacher Login
-            </a>
-            <a href="/panel/login/" class="bg-amber-950/30 border border-amber-200/30 px-6 py-3 rounded-full font-semibold hover:bg-amber-950/40">
-              Admin Login
-            </a>
-          </div>
-        </div>
-
-        <div class="grid sm:grid-cols-2 gap-4">
-          <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
-            <h3 class="text-xl font-bold">Students</h3>
-            <p class="text-amber-100 text-sm mt-2">Register to view classes and manage fees.</p>
-            <div class="flex gap-3 mt-4">
-              <a href="/register/student/" class="bg-white text-amber-900 px-4 py-2 rounded-full font-semibold hover:bg-amber-50">
-                Register
-              </a>
-              <a href="/login/" class="bg-amber-950/30 border border-white/20 px-4 py-2 rounded-full font-semibold hover:bg-amber-950/40">
-                Login
-              </a>
-            </div>
-          </div>
-
-          <div class="bg-white/10 border border-white/15 rounded-3xl p-6">
-            <h3 class="text-xl font-bold">Teachers</h3>
-            <p class="text-amber-100 text-sm mt-2">Register to create schedules and manage learning.</p>
-            <div class="flex gap-3 mt-4">
-              <a href="/register/teacher/" class="bg-white text-amber-900 px-4 py-2 rounded-full font-semibold hover:bg-amber-50">
-                Register
-              </a>
-              <a href="/login/" class="bg-amber-950/30 border border-white/20 px-4 py-2 rounded-full font-semibold hover:bg-amber-950/40">
-                Login
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-      <p class="text-amber-100/80 text-sm mt-6">Note: This is a project demo portal for Narajyoti Music School.</p>
-    </div>
-  </section>
-
-  <!-- FAQ -->
-  <section id="faq" class="max-w-4xl mx-auto px-5 md:px-8 mt-24">
-    <h2 class="text-3xl md:text-4xl font-extrabold text-center mb-12">Frequently Asked Questions</h2>
-
-    <div class="space-y-5">
-      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
-        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
-          <span class="font-semibold text-lg text-stone-800">How do I join Narajyoti Music School?</span>
-          <span class="text-amber-700 text-2xl leading-none">➕</span>
-        </button>
-        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
-          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
-            Click Student Register, create your account, and you can view classes and updates from the portal.
+        <div class="border-l-4 border-green-200 pl-5">
+          <p class="font-serif text-xl italic text-green-500 leading-relaxed">
+            "The goal is not perfection — it is consistent, joyful progress."
           </p>
         </div>
       </div>
 
-      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
-        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
-          <span class="font-semibold text-lg text-stone-800">Can teachers create schedules?</span>
-          <span class="text-amber-700 text-2xl leading-none">➕</span>
-        </button>
-        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
-          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
-            Yes — teachers can create class schedules and students can view them in the dashboard.
-          </p>
+      <div class="flex flex-col gap-4 fade-up-hidden">
+        <div class="flex gap-4 items-start p-5 bg-white border border-cream-300 rounded-2xl hover:border-green-200 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">✅</div>
+          <div>
+            <div class="font-bold text-stone-800 mb-1">Structured Learning</div>
+            <div class="text-stone-500 text-sm leading-relaxed">Clear lesson plans and practice routines so students always know what's next.</div>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start p-5 bg-white border border-cream-300 rounded-2xl hover:border-green-200 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">🎤</div>
+          <div>
+            <div class="font-bold text-stone-800 mb-1">Performance Focus</div>
+            <div class="text-stone-500 text-sm leading-relaxed">Build the confidence to sing and play in front of others, step by step.</div>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start p-5 bg-white border border-cream-300 rounded-2xl hover:border-green-200 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">🧠</div>
+          <div>
+            <div class="font-bold text-stone-800 mb-1">Helpful Feedback</div>
+            <div class="text-stone-500 text-sm leading-relaxed">Precise guidance on pitch, rhythm, and technique — not just encouragement.</div>
+          </div>
+        </div>
+        <div class="flex gap-4 items-start p-5 bg-white border border-cream-300 rounded-2xl hover:border-green-200 hover:shadow-md transition-all">
+          <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">🤝</div>
+          <div>
+            <div class="font-bold text-stone-800 mb-1">Supportive Environment</div>
+            <div class="text-stone-500 text-sm leading-relaxed">Friendly teaching with steady encouragement from day one.</div>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
-        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
-          <span class="font-semibold text-lg text-stone-800">How are fees managed?</span>
-          <span class="text-amber-700 text-2xl leading-none">➕</span>
-        </button>
-        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
-          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
-            Students can view fee status in the portal. Payments are recorded with paid/pending status.
-          </p>
-        </div>
-      </div>
-
-      <div class="bg-white border border-stone-200 rounded-2xl p-6 shadow-sm">
-        <button class="faq-question w-full text-left flex justify-between items-center gap-4" aria-expanded="false">
-          <span class="font-semibold text-lg text-stone-800">Will assessments be available?</span>
-          <span class="text-amber-700 text-2xl leading-none">➕</span>
-        </button>
-        <div class="faq-answer max-h-0 opacity-0 overflow-hidden">
-          <p class="pt-4 text-stone-600 border-t border-stone-100 mt-3">
-            Yes — students will submit practice recordings and receive feedback. (Feature in progress.)
-          </p>
-        </div>
-      </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <!-- CONTACT -->
-  <section id="contact" class="max-w-6xl mx-auto px-5 md:px-8 mt-24 mb-24">
-    <div class="grid lg:grid-cols-2 gap-10">
+<!-- COURSES -->
+<section id="courses" class="py-24 bg-green-50">
+  <div class="max-w-6xl mx-auto px-6 md:px-12">
+
+    <div class="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-14 fade-up-hidden">
       <div>
-        <h2 class="text-3xl md:text-4xl font-extrabold text-stone-900">Contact</h2>
-        <p class="text-stone-600 text-lg mt-3">Visit us or send a message to join classes.</p>
-
-        <div class="mt-6 space-y-3 text-stone-600">
-          <p><span class="text-stone-900 font-semibold">Phone:</span> +977-98XXXXXXXX</p>
-          <p><span class="text-stone-900 font-semibold">Email:</span> narajyotimusicschool@gmail.com</p>
-          <p><span class="text-stone-900 font-semibold">Location:</span> Kathmandu, Nepal</p>
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-0.5 bg-green-500 rounded"></div>
+          <span class="text-green-500 text-xs font-bold tracking-[0.2em] uppercase">Courses</span>
         </div>
+        <h2 class="font-serif text-4xl md:text-5xl font-400 text-stone-900 leading-tight">
+          Pick your <em class="italic text-green-500">path.</em>
+        </h2>
+      </div>
+      <p class="text-stone-500 text-base leading-relaxed max-w-xs">Every course is built around clear progression — so you always know where you're headed.</p>
+    </div>
 
-        <div class="mt-6 flex flex-wrap gap-3">
-          <a href="#access" class="px-6 py-3 rounded-full bg-amber-800 text-white hover:bg-amber-900 font-semibold">
-            Portal Access
-          </a>
-          <a href="/login/" class="px-6 py-3 rounded-full border border-stone-300 hover:border-amber-500 font-semibold">
-            Login
-          </a>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-5 fade-up-hidden">
+
+      <div class="course-underline bg-white border border-cream-300 rounded-2xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all relative overflow-hidden">
+        <span class="text-4xl mb-5 block">🎤</span>
+        <div class="text-xs font-bold tracking-widest text-green-300 uppercase mb-2">01 — Vocals</div>
+        <div class="font-serif text-xl font-500 text-stone-800 mb-3">Vocal Training</div>
+        <div class="text-stone-500 text-sm leading-relaxed">Breath control, pitch accuracy, tone improvement, and stage confidence.</div>
+      </div>
+
+      <div class="course-underline bg-white border border-cream-300 rounded-2xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all relative overflow-hidden">
+        <span class="text-4xl mb-5 block">🎸</span>
+        <div class="text-xs font-bold tracking-widest text-green-300 uppercase mb-2">02 — Strings</div>
+        <div class="font-serif text-xl font-500 text-stone-800 mb-3">Guitar</div>
+        <div class="text-stone-500 text-sm leading-relaxed">Chords, strumming patterns, rhythm control, and song practice from the ground up.</div>
+      </div>
+
+      <div class="course-underline bg-white border border-cream-300 rounded-2xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all relative overflow-hidden">
+        <span class="text-4xl mb-5 block">🎹</span>
+        <div class="text-xs font-bold tracking-widest text-green-300 uppercase mb-2">03 — Keys</div>
+        <div class="font-serif text-xl font-500 text-stone-800 mb-3">Keyboard / Harmonium</div>
+        <div class="text-stone-500 text-sm leading-relaxed">Notes, scales, accompaniment, and foundational music theory.</div>
+      </div>
+
+      <div class="course-underline bg-white border border-cream-300 rounded-2xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all relative overflow-hidden">
+        <span class="text-4xl mb-5 block">🥁</span>
+        <div class="text-xs font-bold tracking-widest text-green-300 uppercase mb-2">04 — Rhythm</div>
+        <div class="font-serif text-xl font-500 text-stone-800 mb-3">Rhythm Practice</div>
+        <div class="text-stone-500 text-sm leading-relaxed">Timing, claps, counts, and exercises to strengthen musical accuracy.</div>
+      </div>
+
+      <div class="course-underline bg-white border border-cream-300 rounded-2xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all relative overflow-hidden">
+        <span class="text-4xl mb-5 block">🎶</span>
+        <div class="text-xs font-bold tracking-widest text-green-300 uppercase mb-2">05 — Performance</div>
+        <div class="font-serif text-xl font-500 text-stone-800 mb-3">Song Coaching</div>
+        <div class="text-stone-500 text-sm leading-relaxed">Expression, stage readiness, and performance confidence building.</div>
+      </div>
+
+      <div class="course-underline bg-white border border-cream-300 rounded-2xl p-8 hover:shadow-lg hover:-translate-y-1 transition-all relative overflow-hidden">
+        <span class="text-4xl mb-5 block">📚</span>
+        <div class="text-xs font-bold tracking-widest text-green-300 uppercase mb-2">06 — Foundation</div>
+        <div class="font-serif text-xl font-500 text-stone-800 mb-3">Beginner Foundation</div>
+        <div class="text-stone-500 text-sm leading-relaxed">Basics, posture, practice habits, and progress tracking for new learners.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SYSTEM / PORTAL -->
+<section id="system" class="py-24 bg-cream-100">
+  <div class="max-w-6xl mx-auto px-6 md:px-12">
+    <div class="grid md:grid-cols-2 gap-16 items-center">
+
+      <div class="fade-up-hidden">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-0.5 bg-green-500 rounded"></div>
+          <span class="text-green-500 text-xs font-bold tracking-[0.2em] uppercase">The Portal</span>
+        </div>
+        <h2 class="font-serif text-4xl md:text-5xl font-400 text-stone-900 leading-tight mb-4">
+          Stay organized, <em class="italic text-green-500">always.</em>
+        </h2>
+        <p class="text-stone-500 text-base leading-relaxed mb-10">A simple portal built for both students and teachers — keeping schedules, fees, and progress in one place.</p>
+
+        <div class="flex flex-col divide-y divide-cream-300">
+          <div class="flex gap-4 py-6">
+            <div class="font-serif text-xl italic text-green-200 shrink-0 w-7 pt-0.5">1.</div>
+            <div>
+              <div class="font-bold text-stone-800 mb-1">Class Schedules</div>
+              <div class="text-stone-500 text-sm leading-relaxed">Teachers create sessions. Students view all upcoming classes from their dashboard.</div>
+            </div>
+          </div>
+          <div class="flex gap-4 py-6">
+            <div class="font-serif text-xl italic text-green-200 shrink-0 w-7 pt-0.5">2.</div>
+            <div>
+              <div class="font-bold text-stone-800 mb-1">Fees & Payments</div>
+              <div class="text-stone-500 text-sm leading-relaxed">Track monthly fees with clear paid/pending status. No confusion, no missed payments.</div>
+            </div>
+          </div>
+          <div class="flex gap-4 py-6">
+            <div class="font-serif text-xl italic text-green-200 shrink-0 w-7 pt-0.5">3.</div>
+            <div>
+              <div class="font-bold text-stone-800 mb-1">Assessments</div>
+              <div class="text-stone-500 text-sm leading-relaxed">Submit practice recordings and receive structured feedback. (Feature in progress.)</div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="bg-white p-8 rounded-3xl border border-stone-200 shadow-sm">
-        <h3 class="text-2xl font-bold">Send a message</h3>
-        <p class="text-stone-600 mt-2">This contact form is a demo for the project.</p>
+      <!-- Mock dashboard -->
+      <div class="fade-up-hidden">
+        <div class="bg-white border border-cream-300 rounded-2xl overflow-hidden shadow-lg shadow-stone-200/50">
+          <div class="bg-green-500 px-7 py-5 flex items-center justify-between">
+            <span class="font-serif text-white text-lg font-500">Student Dashboard</span>
+            <div class="w-2.5 h-2.5 rounded-full bg-green-200 opacity-70"></div>
+          </div>
+          <div class="divide-y divide-cream-200">
+            <div class="flex items-center justify-between px-7 py-4">
+              <span class="text-stone-500 text-sm font-500">Next Class</span>
+              <span class="text-stone-800 text-sm font-bold">Vocal — Today 4:00 PM</span>
+            </div>
+            <div class="flex items-center justify-between px-7 py-4">
+              <span class="text-stone-500 text-sm font-500">Guitar Session</span>
+              <span class="text-stone-800 text-sm font-bold">Thu, 5:30 PM</span>
+            </div>
+            <div class="flex items-center justify-between px-7 py-4">
+              <span class="text-stone-500 text-sm font-500">Fee — Baisakh 2082</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-100 border border-green-200 text-green-500 text-xs font-bold">Paid ✓</span>
+            </div>
+            <div class="flex items-center justify-between px-7 py-4">
+              <span class="text-stone-500 text-sm font-500">Fee — Jestha 2082</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full bg-amber-50 border border-amber-200 text-amber-600 text-xs font-bold">Pending</span>
+            </div>
+            <div class="flex items-center justify-between px-7 py-4">
+              <span class="text-stone-500 text-sm font-500">Last Assessment</span>
+              <span class="text-stone-800 text-sm font-bold">Pitch — 88% ↑</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-        <form class="mt-6 space-y-4">
-          <input class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
-                 placeholder="Your name" />
-          <input class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
-                 placeholder="Your phone or email" />
-          <textarea rows="4" class="w-full px-4 py-3 rounded-2xl bg-stone-50 border border-stone-200 outline-none focus:ring-2 focus:ring-amber-400"
-                    placeholder="Your message"></textarea>
-          <button type="button" class="w-full py-3 rounded-2xl bg-amber-800 text-white hover:bg-amber-900 font-semibold">
-            Send
+    </div>
+  </div>
+</section>
+
+<!-- ACCESS -->
+<section id="access" class="py-24 bg-green-50">
+  <div class="max-w-6xl mx-auto px-6 md:px-12">
+    <div class="grid md:grid-cols-2 gap-8">
+
+      <!-- Main CTA card -->
+      <div class="fade-up-hidden bg-green-500 rounded-3xl p-12 flex flex-col justify-between min-h-[360px] relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-48 h-48 rounded-full bg-white/10 -translate-y-1/4 translate-x-1/4 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-32 h-32 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/3 pointer-events-none"></div>
+        <div>
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-6 h-0.5 bg-green-200 rounded"></div>
+            <span class="text-green-200 text-xs font-bold tracking-[0.2em] uppercase">Get Started</span>
+          </div>
+          <h2 class="font-serif text-4xl font-400 text-white leading-tight mb-4">
+            Enter the <em class="italic">portal.</em>
+          </h2>
+          <p class="text-green-200 text-base leading-relaxed mb-8">Register or login to manage classes, track payments, and follow your musical journey.</p>
+          <div class="flex flex-wrap gap-3">
+            <a href="/login/" class="px-6 py-2.5 rounded-full bg-white text-green-500 text-sm font-bold hover:bg-cream-100 transition-all">Login →</a>
+            <a href="/panel/login/" class="px-6 py-2.5 rounded-full border-2 border-white/30 text-white text-sm font-semibold hover:border-white/70 hover:bg-white/10 transition-all">Admin</a>
+          </div>
+        </div>
+        <p class="text-green-300/60 text-xs mt-8 leading-relaxed">Project demo portal for Narajyoti Music School · Kathmandu, Nepal.</p>
+      </div>
+
+      <!-- Role cards -->
+      <div class="flex flex-col gap-5">
+        <div class="fade-up-hidden bg-white border border-cream-300 rounded-2xl p-8 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-serif text-2xl font-500 text-stone-800">Students</span>
+            <span class="text-3xl">🎓</span>
+          </div>
+          <p class="text-stone-500 text-sm leading-relaxed mb-6">Create an account to view your class schedule, check fee status, and track progress.</p>
+          <div class="flex gap-3">
+            <a href="/register/student/" class="flex-1 text-center py-2.5 rounded-full bg-green-500 text-white text-sm font-bold hover:bg-green-400 transition-all">Register</a>
+            <a href="/login/" class="flex-1 text-center py-2.5 rounded-full border-2 border-green-200 text-green-500 text-sm font-semibold hover:border-green-500 hover:bg-green-100 transition-all">Login →</a>
+          </div>
+        </div>
+
+        <div class="fade-up-hidden bg-white border border-cream-300 rounded-2xl p-8 hover:border-green-200 hover:shadow-md transition-all">
+          <div class="flex items-center justify-between mb-3">
+            <span class="font-serif text-2xl font-500 text-stone-800">Teachers</span>
+            <span class="text-3xl">🎼</span>
+          </div>
+          <p class="text-stone-500 text-sm leading-relaxed mb-6">Register to create schedules, add student records, and oversee learning progress.</p>
+          <div class="flex gap-3">
+            <a href="/register/teacher/" class="flex-1 text-center py-2.5 rounded-full bg-green-500 text-white text-sm font-bold hover:bg-green-400 transition-all">Register</a>
+            <a href="/login/" class="flex-1 text-center py-2.5 rounded-full border-2 border-green-200 text-green-500 text-sm font-semibold hover:border-green-500 hover:bg-green-100 transition-all">Login →</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-24 bg-cream-100">
+  <div class="max-w-6xl mx-auto px-6 md:px-12">
+    <div class="grid md:grid-cols-3 gap-16 items-start">
+
+      <div class="md:sticky md:top-24 fade-up-hidden">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-0.5 bg-green-500 rounded"></div>
+          <span class="text-green-500 text-xs font-bold tracking-[0.2em] uppercase">FAQ</span>
+        </div>
+        <h2 class="font-serif text-4xl font-400 text-stone-900 leading-tight mb-4">
+          Got <em class="italic text-green-500">questions?</em>
+        </h2>
+        <p class="text-stone-500 text-sm leading-relaxed">Everything you need to know about joining and using the portal.</p>
+      </div>
+
+      <div class="md:col-span-2 flex flex-col gap-3 fade-up-hidden">
+
+        <div class="faq-item bg-white border border-cream-300 rounded-2xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between gap-4 px-6 py-5 text-left bg-transparent border-none cursor-pointer">
+            <span class="font-semibold text-stone-800 text-base leading-snug">How do I join Narajyoti Music School?</span>
+            <div class="faq-icon w-7 h-7 shrink-0 bg-green-100 border border-green-200 rounded-full flex items-center justify-center text-green-500 font-light text-lg transition-all">+</div>
           </button>
-        </form>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-6 pb-5 pt-1 border-t border-cream-200 text-stone-500 text-sm leading-relaxed">
+              Click Student Register, create your account, and you can immediately view classes and updates from your portal dashboard.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item bg-white border border-cream-300 rounded-2xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between gap-4 px-6 py-5 text-left bg-transparent border-none cursor-pointer">
+            <span class="font-semibold text-stone-800 text-base leading-snug">Can teachers create their own schedules?</span>
+            <div class="faq-icon w-7 h-7 shrink-0 bg-green-100 border border-green-200 rounded-full flex items-center justify-center text-green-500 font-light text-lg transition-all">+</div>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-6 pb-5 pt-1 border-t border-cream-200 text-stone-500 text-sm leading-relaxed">
+              Yes — teachers create class schedules from their dashboard, and students can view all upcoming sessions from theirs.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item bg-white border border-cream-300 rounded-2xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between gap-4 px-6 py-5 text-left bg-transparent border-none cursor-pointer">
+            <span class="font-semibold text-stone-800 text-base leading-snug">How are monthly fees managed?</span>
+            <div class="faq-icon w-7 h-7 shrink-0 bg-green-100 border border-green-200 rounded-full flex items-center justify-center text-green-500 font-light text-lg transition-all">+</div>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-6 pb-5 pt-1 border-t border-cream-200 text-stone-500 text-sm leading-relaxed">
+              Students view fee status in the portal. Each month is recorded with a clear paid or pending status — no chasing required.
+            </div>
+          </div>
+        </div>
+
+        <div class="faq-item bg-white border border-cream-300 rounded-2xl overflow-hidden">
+          <button class="faq-btn w-full flex items-center justify-between gap-4 px-6 py-5 text-left bg-transparent border-none cursor-pointer">
+            <span class="font-semibold text-stone-800 text-base leading-snug">Will assessments be available soon?</span>
+            <div class="faq-icon w-7 h-7 shrink-0 bg-green-100 border border-green-200 rounded-full flex items-center justify-center text-green-500 font-light text-lg transition-all">+</div>
+          </button>
+          <div class="faq-answer max-h-0 overflow-hidden transition-all duration-300">
+            <div class="px-6 pb-5 pt-1 border-t border-cream-200 text-stone-500 text-sm leading-relaxed">
+              Yes — students will submit practice recordings and receive structured feedback from teachers. Feature is currently in progress.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
-  </section>
+  </div>
+</section>
 
-  <footer class="border-t border-stone-200 py-8 text-center text-stone-400 text-sm">
-    © 2026 Narajyoti Music School · Learn • Practice • Perform
-  </footer>
+<!-- CONTACT -->
+<section id="contact" class="py-24 bg-green-50">
+  <div class="max-w-6xl mx-auto px-6 md:px-12">
+    <div class="grid md:grid-cols-2 gap-16 items-start">
 
-</main>
+      <div class="fade-up-hidden">
+        <div class="flex items-center gap-2 mb-4">
+          <div class="w-7 h-0.5 bg-green-500 rounded"></div>
+          <span class="text-green-500 text-xs font-bold tracking-[0.2em] uppercase">Contact</span>
+        </div>
+        <h2 class="font-serif text-4xl md:text-5xl font-400 text-stone-900 leading-tight mb-4">
+          Come <em class="italic text-green-500">say hello.</em>
+        </h2>
+        <p class="text-stone-500 text-base leading-relaxed mb-10">Visit us in Kathmandu or send a message to ask about joining classes.</p>
+
+        <div class="flex flex-col gap-5 mb-10">
+          <div class="flex gap-4 items-start">
+            <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">📞</div>
+            <div>
+              <div class="text-xs font-bold tracking-widest text-stone-400 uppercase mb-1">Phone</div>
+              <div class="font-semibold text-stone-800">+977-98XXXXXXXX</div>
+            </div>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">✉️</div>
+            <div>
+              <div class="text-xs font-bold tracking-widest text-stone-400 uppercase mb-1">Email</div>
+              <div class="font-semibold text-stone-800">narajyotimusicschool@gmail.com</div>
+            </div>
+          </div>
+          <div class="flex gap-4 items-start">
+            <div class="w-11 h-11 bg-green-100 border border-green-200 rounded-xl flex items-center justify-center text-xl shrink-0">📍</div>
+            <div>
+              <div class="text-xs font-bold tracking-widest text-stone-400 uppercase mb-1">Location</div>
+              <div class="font-semibold text-stone-800">Kathmandu, Nepal</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <a href="#access" class="px-6 py-3 rounded-full bg-green-500 text-white font-bold text-sm hover:bg-green-400 transition-all">Portal Access →</a>
+          <a href="/login/" class="px-6 py-3 rounded-full border-2 border-green-200 text-green-500 font-semibold text-sm hover:border-green-500 hover:bg-green-100 transition-all">Login</a>
+        </div>
+      </div>
+
+      <div class="fade-up-hidden bg-white border border-cream-300 rounded-2xl p-10 shadow-lg shadow-stone-200/40">
+        <div class="font-serif text-2xl font-500 text-stone-800 mb-1">Send a message</div>
+        <div class="text-stone-400 text-sm mb-8">This contact form is a demo for the project.</div>
+
+        <div class="mb-5">
+          <label class="block text-xs font-bold tracking-widest text-stone-400 uppercase mb-2">Your Name</label>
+          <input type="text" placeholder="e.g. Priya Sharma" class="w-full bg-cream-100 border border-cream-300 rounded-xl px-4 py-3 text-stone-800 text-sm outline-none focus:border-green-300 focus:ring-2 focus:ring-green-100 transition-all placeholder-stone-300" />
+        </div>
+        <div class="mb-5">
+          <label class="block text-xs font-bold tracking-widest text-stone-400 uppercase mb-2">Phone or Email</label>
+          <input type="text" placeholder="98XXXXXXXX or you@email.com" class="w-full bg-cream-100 border border-cream-300 rounded-xl px-4 py-3 text-stone-800 text-sm outline-none focus:border-green-300 focus:ring-2 focus:ring-green-100 transition-all placeholder-stone-300" />
+        </div>
+        <div class="mb-6">
+          <label class="block text-xs font-bold tracking-widest text-stone-400 uppercase mb-2">Message</label>
+          <textarea rows="4" placeholder="Tell us what you're interested in..." class="w-full bg-cream-100 border border-cream-300 rounded-xl px-4 py-3 text-stone-800 text-sm outline-none focus:border-green-300 focus:ring-2 focus:ring-green-100 transition-all placeholder-stone-300 resize-y"></textarea>
+        </div>
+        <button type="button" class="w-full py-3.5 bg-green-500 text-white rounded-xl font-bold text-sm hover:bg-green-400 hover:-translate-y-0.5 transition-all shadow-lg shadow-green-500/20">
+          Send Message →
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-green-500 py-8 px-6 md:px-12 flex flex-wrap items-center justify-between gap-4">
+  <div class="font-serif text-white text-xl font-500">Narajyoti</div>
+  <div class="text-green-200 text-sm">© 2026 Narajyoti Music School</div>
+  <div class="text-green-300 text-xs tracking-widest uppercase">Learn · Practice · Perform</div>
+</footer>
 
 <script>
-  // Mobile menu
-  const menuBtn = document.getElementById('menuBtn');
-  const mobileMenu = document.getElementById('mobileMenu');
-  function toggleMobile() { mobileMenu.classList.toggle('hidden'); }
-  menuBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleMobile(); });
-  document.addEventListener('click', (e) => {
-    if (!mobileMenu.classList.contains('hidden') && !menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
-      mobileMenu.classList.add('hidden');
+  // Nav scroll shadow
+  const navbar = document.getElementById('navbar');
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 30) {
+      navbar.classList.add('border-green-200', 'shadow-md', 'shadow-stone-200/50');
+    } else {
+      navbar.classList.remove('border-green-200', 'shadow-md', 'shadow-stone-200/50');
     }
   });
 
-  // FAQ accordion
-  document.querySelectorAll('.faq-question').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const answer = btn.nextElementSibling;
-      const icon = btn.querySelector('span:last-child');
-      const expanded = btn.getAttribute('aria-expanded') === 'true';
-      btn.setAttribute('aria-expanded', String(!expanded));
+  // Mobile menu
+  const hamburger = document.getElementById('hamburger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  hamburger.addEventListener('click', e => {
+    e.stopPropagation();
+    mobileMenu.classList.toggle('hidden');
+    mobileMenu.classList.toggle('flex');
+  });
+  function closeMobile() {
+    mobileMenu.classList.add('hidden');
+    mobileMenu.classList.remove('flex');
+  }
+  document.addEventListener('click', e => {
+    if (!mobileMenu.contains(e.target) && !hamburger.contains(e.target)) closeMobile();
+  });
 
-      if (!expanded) {
+  // FAQ accordion
+  document.querySelectorAll('.faq-item').forEach(item => {
+    item.querySelector('.faq-btn').addEventListener('click', () => {
+      const answer = item.querySelector('.faq-answer');
+      const icon = item.querySelector('.faq-icon');
+      const isOpen = item.classList.contains('open');
+
+      // Close all
+      document.querySelectorAll('.faq-item').forEach(i => {
+        i.classList.remove('open', 'border-green-200');
+        i.querySelector('.faq-answer').style.maxHeight = '0';
+        i.querySelector('.faq-icon').textContent = '+';
+        i.querySelector('.faq-icon').classList.remove('bg-green-500', 'text-white', 'border-green-500');
+        i.querySelector('.faq-icon').classList.add('bg-green-100', 'text-green-500', 'border-green-200');
+      });
+
+      if (!isOpen) {
+        item.classList.add('open', 'border-green-200');
         answer.style.maxHeight = answer.scrollHeight + 'px';
-        answer.style.opacity = '1';
-        icon.textContent = '➖';
-      } else {
-        answer.style.maxHeight = '0';
-        answer.style.opacity = '0';
-        icon.textContent = '➕';
+        icon.textContent = '−';
+        icon.classList.add('bg-green-500', 'text-white', 'border-green-500');
+        icon.classList.remove('bg-green-100', 'text-green-500', 'border-green-200');
       }
     });
   });
+
+  // Scroll fade-up
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) entry.target.classList.add('visible');
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up-hidden').forEach(el => observer.observe(el));
 </script>
 
 </body>
