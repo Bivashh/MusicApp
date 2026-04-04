@@ -2,30 +2,175 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Admin Login</title>
+  <title>Admin Login · Narajyoti Music School</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'Georgia', 'serif'],
+            sans: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            green: {
+              50:  '#f4f8f3',
+              100: '#eef4ec',
+              200: '#c8dac3',
+              300: '#7a9e6f',
+              400: '#5c7f52',
+              500: '#4a6741',
+              600: '#3d5636',
+            },
+            cream: {
+              50:  '#fdfaf5',
+              100: '#f9f5ee',
+              200: '#f3ede2',
+              300: '#ede4d6',
+            }
+          },
+          boxShadow: {
+            soft: '0 10px 30px rgba(28, 25, 23, 0.08)',
+            glow: '0 18px 50px rgba(74, 103, 65, 0.16)',
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-gradient-to-r from-indigo-600 to-purple-600 min-h-screen flex items-center justify-center">
 
-<div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md">
-  <h2 class="text-2xl font-bold text-center mb-6">Admin Login</h2>
+<body class="bg-cream-100 min-h-screen text-stone-800 font-sans antialiased">
 
-  {% if error %}
-    <div class="mb-4 p-3 rounded-xl bg-red-100 text-red-700 font-semibold">{{ error }}</div>
-  {% endif %}
+  <div class="min-h-screen grid lg:grid-cols-2">
 
-  <form method="POST" class="space-y-4">
-    {% csrf_token %}
-    <input name="username" placeholder="Username"
-      class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
-    <input name="password" type="password" placeholder="Password"
-      class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none">
+    <!-- LEFT PANEL -->
+    <div class="hidden lg:flex relative overflow-hidden border-r border-cream-300 bg-gradient-to-br from-cream-100 via-cream-50 to-green-50">
+      <div class="absolute top-0 left-0 w-72 h-72 bg-green-100 rounded-full blur-3xl opacity-60 -translate-x-1/3 -translate-y-1/3"></div>
+      <div class="absolute bottom-0 right-0 w-80 h-80 bg-green-200 rounded-full blur-3xl opacity-40 translate-x-1/4 translate-y-1/4"></div>
 
-    <button class="w-full py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 font-semibold">
-      Login
-    </button>
-  </form>
-</div>
+      <div class="relative z-10 flex flex-col justify-between w-full p-12 xl:p-16">
+        <div>
+          <a href="/" class="inline-flex items-center gap-3 mb-10">
+            <div class="w-12 h-12 rounded-2xl bg-green-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-green-500/20">
+              🎵
+            </div>
+            <div>
+              <div class="font-serif text-2xl text-green-500 leading-none">Narajyoti</div>
+              <div class="text-xs font-bold tracking-[0.18em] uppercase text-stone-400 mt-1">Music School</div>
+            </div>
+          </a>
+
+          <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/80 border border-cream-300 mb-8 shadow-sm">
+            <div class="w-2 h-2 rounded-full bg-green-500"></div>
+            <span class="text-[11px] font-bold tracking-[0.18em] uppercase text-green-500">Admin Access</span>
+          </div>
+
+          <h1 class="font-serif text-5xl xl:text-6xl leading-[1.08] text-stone-900 max-w-xl">
+            Manage the
+            <em class="italic not-italic text-green-500">school portal.</em>
+          </h1>
+
+          <p class="mt-6 max-w-xl text-lg leading-relaxed text-stone-500">
+            Secure admin access for monitoring students, teachers, classes, payments, and overall Narajyoti Music School operations.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 max-w-xl">
+          <div class="rounded-2xl border border-cream-300 bg-white/85 p-5 shadow-sm backdrop-blur-sm">
+            <div class="text-2xl mb-3">👥</div>
+            <div class="font-semibold text-stone-800 mb-1">User Management</div>
+            <div class="text-sm leading-relaxed text-stone-500">Oversee teacher and student activity from one place.</div>
+          </div>
+
+          <div class="rounded-2xl border border-cream-300 bg-white/85 p-5 shadow-sm backdrop-blur-sm">
+            <div class="text-2xl mb-3">📊</div>
+            <div class="font-semibold text-stone-800 mb-1">Portal Control</div>
+            <div class="text-sm leading-relaxed text-stone-500">Access school records and monitor the demo system smoothly.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="relative flex items-center justify-center px-5 py-12 sm:px-8 bg-cream-100">
+      <div class="absolute inset-0 pointer-events-none">
+        <div class="absolute top-16 right-10 w-40 h-40 bg-green-100 rounded-full blur-3xl opacity-50"></div>
+        <div class="absolute bottom-12 left-8 w-40 h-40 bg-cream-300 rounded-full blur-3xl opacity-60"></div>
+      </div>
+
+      <div class="relative z-10 w-full max-w-md">
+        <div class="lg:hidden text-center mb-6">
+          <a href="/" class="inline-flex items-center gap-3">
+            <div class="w-12 h-12 rounded-2xl bg-green-500 text-white flex items-center justify-center text-2xl shadow-lg shadow-green-500/20">
+              🎵
+            </div>
+            <div class="text-left">
+              <div class="font-serif text-2xl text-green-500 leading-none">Narajyoti</div>
+              <div class="text-[10px] font-bold tracking-[0.18em] uppercase text-stone-400 mt-1">Music School</div>
+            </div>
+          </a>
+        </div>
+
+        <div class="rounded-[28px] border border-cream-300 bg-white/95 shadow-soft backdrop-blur-sm overflow-hidden">
+          <div class="px-8 sm:px-10 pt-8 sm:pt-10 pb-6 border-b border-cream-200 bg-gradient-to-b from-cream-50 to-white">
+            <div class="w-14 h-14 rounded-2xl bg-green-100 border border-green-200 flex items-center justify-center text-2xl mb-5">
+              🛡️
+            </div>
+            <h2 class="font-serif text-4xl leading-tight text-stone-900">Admin Login</h2>
+            <p class="text-stone-500 mt-2 text-sm sm:text-base">Enter your credentials to access the admin panel.</p>
+          </div>
+
+          <div class="px-8 sm:px-10 py-8">
+            {% if error %}
+              <div class="mb-5 p-3 rounded-2xl bg-red-50 border border-red-200 text-red-700 font-semibold">
+                {{ error }}
+              </div>
+            {% endif %}
+
+            <form method="POST" class="space-y-5">
+              {% csrf_token %}
+
+              <div>
+                <label class="block text-xs font-bold tracking-[0.18em] uppercase text-stone-400 mb-2">Username</label>
+                <input
+                  name="username"
+                  placeholder="Username"
+                  class="w-full px-4 py-3.5 rounded-2xl bg-cream-50 border border-cream-300 text-stone-800 placeholder-stone-400 outline-none transition-all focus:border-green-300 focus:ring-4 focus:ring-green-100"
+                >
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold tracking-[0.18em] uppercase text-stone-400 mb-2">Password</label>
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Password"
+                  class="w-full px-4 py-3.5 rounded-2xl bg-cream-50 border border-cream-300 text-stone-800 placeholder-stone-400 outline-none transition-all focus:border-green-300 focus:ring-4 focus:ring-green-100"
+                >
+              </div>
+
+              <button class="w-full py-3.5 bg-green-500 text-white rounded-2xl hover:bg-green-400 font-bold text-sm shadow-glow transition-all">
+                Login →
+              </button>
+            </form>
+
+            <div class="mt-6 text-center">
+              <a href="/" class="inline-flex items-center gap-2 text-sm font-medium text-stone-500 hover:text-green-600 transition">
+                ← Back to Home
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-center text-xs tracking-[0.15em] uppercase text-stone-400 mt-6">
+          Narajyoti Music School Admin Portal
+        </p>
+      </div>
+    </div>
+  </div>
 
 </body>
 </html>

@@ -2,49 +2,158 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Manage Teachers</title>
+  <title>Manage Teachers · Narajyoti Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            green: {
+              100: '#eef4ec',
+              200: '#c8dac3',
+              400: '#5c7f52',
+              500: '#4a6741',
+            },
+            cream: {
+              100: '#f9f5ee',
+              200: '#f3ede2',
+            }
+          }
+        }
+      }
+    }
+  </script>
 </head>
-<body class="bg-gray-100 min-h-screen">
-<div class="max-w-6xl mx-auto py-10 px-4">
 
-  <div class="flex items-center justify-between mb-8">
-    <h2 class="text-3xl font-bold text-gray-800">Teachers</h2>
-    <a href="/admin/dashboard/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">← Back</a>
-  </div>
+<body class="bg-cream-100 min-h-screen text-stone-800 font-sans antialiased">
 
-  <div class="bg-white rounded-2xl shadow p-6">
-    <table class="w-full">
-      <thead>
-        <tr class="text-left text-gray-600 border-b">
-          <th class="py-3">ID</th>
-          <th class="py-3">Name</th>
-          <th class="py-3">Email</th>
-          <th class="py-3">Phone</th>
-          <th class="py-3">Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for t in teachers %}
-        <tr class="border-b hover:bg-gray-50">
-          <td class="py-4">{{ t.teacher_id }}</td>
-          <td class="py-4 font-semibold">{{ t.full_name }}</td>
-          <td class="py-4">{{ t.email }}</td>
-          <td class="py-4">{{ t.phone }}</td>
-          <td class="py-4">
-            <a href="/admin/teacher/delete/{{ t.teacher_id }}/"
-               class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
-              Delete
-            </a>
-          </td>
-        </tr>
-        {% empty %}
-        <tr><td class="py-6 text-center text-gray-500" colspan="5">No teachers found.</td></tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
+  <!-- ADMIN NAVBAR -->
+  <nav class="sticky top-0 z-40 border-b border-cream-200 bg-white/90 backdrop-blur">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
 
-</div>
+      <a href="/panel/dashboard/" class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-green-500 text-white flex items-center justify-center text-xl shadow">
+          🛡️
+        </div>
+        <div>
+          <p class="font-serif text-xl text-green-500 leading-none">Narajyoti</p>
+          <p class="text-[10px] font-bold tracking-widest uppercase text-stone-400 mt-1">Admin Portal</p>
+        </div>
+      </a>
+
+      <div class="flex flex-wrap gap-3">
+        <a href="/panel/dashboard/" class="px-4 py-2.5 rounded-full border border-cream-200 bg-white hover:border-green-300 hover:text-green-500 font-semibold transition">
+          Dashboard
+        </a>
+        <a href="/panel/students/" class="px-4 py-2.5 rounded-full border border-cream-200 bg-white hover:border-green-300 hover:text-green-500 font-semibold transition">
+          Students
+        </a>
+        <a href="/panel/teachers/" class="px-4 py-2.5 rounded-full bg-green-500 text-white font-semibold shadow hover:bg-green-400 transition">
+          Teachers
+        </a>
+        <a href="/panel/payments/" class="px-4 py-2.5 rounded-full border border-cream-200 bg-white hover:border-green-300 hover:text-green-500 font-semibold transition">
+          Payments
+        </a>
+        <a href="/panel/logout/" class="px-4 py-2.5 rounded-full bg-stone-900 text-white hover:bg-stone-700 font-semibold transition">
+          Logout
+        </a>
+      </div>
+
+    </div>
+  </nav>
+
+  <main class="max-w-7xl mx-auto py-8 md:py-10 px-6 space-y-8">
+
+    <!-- HERO -->
+    <section class="rounded-[2rem] border border-green-200 bg-gradient-to-r from-green-500 to-green-400 text-white p-8 md:p-10 shadow-lg">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+        <div>
+          <p class="text-sm font-bold tracking-widest uppercase text-green-100">Admin Management</p>
+          <h1 class="font-serif text-4xl md:text-5xl mt-2">Teachers</h1>
+          <p class="mt-3 text-green-100 max-w-2xl">
+            View registered teachers and manage instructor records from your custom admin portal.
+          </p>
+        </div>
+
+        <!-- fixed back link -->
+        <a href="/panel/dashboard/" class="px-5 py-3 rounded-full bg-white text-green-500 font-bold hover:bg-cream-100 transition">
+          ← Back
+        </a>
+      </div>
+    </section>
+
+    <!-- TABLE CARD -->
+    <section class="bg-white rounded-[1.75rem] border border-cream-200 shadow p-6 overflow-x-auto">
+      <div class="flex items-center justify-between mb-6">
+        <div>
+          <p class="text-xs font-bold tracking-widest uppercase text-green-500">Teacher Records</p>
+          <h2 class="font-serif text-3xl text-stone-900 mt-2">Manage Teachers</h2>
+        </div>
+      </div>
+
+      <table class="w-full min-w-[850px]">
+        <thead>
+          <tr class="text-left text-stone-500 border-b border-cream-200 text-sm uppercase">
+            <th class="py-4">ID</th>
+            <th class="py-4">Name</th>
+            <th class="py-4">Email</th>
+            <th class="py-4">Phone</th>
+            <th class="py-4">Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for t in teachers %}
+          <tr class="border-b border-cream-100 hover:bg-cream-100/50 transition">
+            <td class="py-4 text-stone-600 font-semibold">{{ t.teacher_id }}</td>
+            <td class="py-4 font-semibold text-stone-900">{{ t.full_name }}</td>
+            <td class="py-4 text-stone-600 break-all">{{ t.email }}</td>
+            <td class="py-4 text-stone-600">{{ t.phone }}</td>
+            <td class="py-4">
+              <a href="/admin/teacher/delete/{{ t.teacher_id }}/"
+                 class="inline-flex items-center px-4 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 font-semibold transition">
+                Delete
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" class="py-14 text-center text-stone-500">
+              No teachers found.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="mt-12 border-t border-green-200 bg-green-500">
+    <div class="max-w-7xl mx-auto px-6 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-white">
+      <div class="text-center md:text-left">
+        <div class="font-serif text-2xl leading-none">Narajyoti</div>
+        <div class="text-green-100 text-xs font-bold tracking-widest uppercase mt-1">Custom Admin Portal</div>
+      </div>
+
+      <div class="text-green-100 text-sm text-center">
+        Teacher Management Panel
+      </div>
+
+      <div class="text-green-100 text-xs tracking-widest uppercase text-center">
+        Monitor · Manage · Control
+      </div>
+    </div>
+  </footer>
+
 </body>
 </html>

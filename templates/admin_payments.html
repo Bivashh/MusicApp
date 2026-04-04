@@ -2,54 +2,149 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Payments</title>
+  <title>Payments · Narajyoti Admin</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen">
-<div class="max-w-6xl mx-auto py-10 px-4">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Nunito', 'sans-serif'],
+          },
+          colors: {
+            green: {
+              500: '#4a6741',
+              400: '#5c7f52',
+            },
+            cream: {
+              100: '#f9f5ee',
+              200: '#f3ede2',
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+
+<body class="bg-cream-100 min-h-screen text-stone-800 font-sans">
+
+<!-- NAVBAR -->
+<nav class="sticky top-0 z-40 border-b border-cream-200 bg-white/90 backdrop-blur">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+
+    <a href="/panel/dashboard/" class="flex items-center gap-3">
+      <div class="w-11 h-11 rounded-xl bg-green-500 text-white flex items-center justify-center text-xl">🛡️</div>
+      <div>
+        <p class="font-serif text-xl text-green-500">Narajyoti</p>
+        <p class="text-xs text-gray-400 font-bold uppercase">Admin</p>
+      </div>
+    </a>
+
+    <div class="flex gap-3">
+      <a href="/panel/dashboard/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Dashboard</a>
+      <a href="/panel/students/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Students</a>
+      <a href="/panel/teachers/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Teachers</a>
+      <a href="/panel/logout/" class="px-4 py-2 bg-black text-white rounded-full font-semibold">Logout</a>
+    </div>
+
+  </div>
+</nav>
+
+<div class="max-w-7xl mx-auto py-10 px-6">
+
+  <!-- HEADER -->
   <div class="flex items-center justify-between mb-8">
-    <h2 class="text-3xl font-bold text-gray-800">Payments</h2>
-    <a href="/admin/dashboard/" class="px-4 py-2 bg-white rounded-xl shadow hover:shadow-md font-semibold">← Back</a>
+    <div>
+      <p class="text-sm font-bold text-green-500 uppercase">Admin Panel</p>
+      <h2 class="text-4xl font-serif text-stone-900">Payments</h2>
+    </div>
+
+    <!-- ✅ FIXED BACK BUTTON -->
+    <a href="/panel/dashboard/" class="px-5 py-2 rounded-full border border-stone-300 hover:border-green-400 font-semibold">
+      ← Back
+    </a>
   </div>
 
-  <div class="bg-white rounded-2xl shadow p-6">
-    <table class="w-full">
+  <!-- TABLE CARD -->
+  <div class="bg-white rounded-3xl border border-cream-200 shadow p-6 overflow-x-auto">
+
+    <table class="w-full min-w-[900px]">
+
       <thead>
-        <tr class="text-left text-gray-600 border-b">
-          <th class="py-3">Student</th>
-          <th class="py-3">Class</th>
-          <th class="py-3">Month</th>
-          <th class="py-3">Amount</th>
-          <th class="py-3">Status</th>
-          <th class="py-3">Txn</th>
+        <tr class="text-left text-stone-500 border-b border-cream-200 text-sm uppercase">
+          <th class="py-4">Student</th>
+          <th class="py-4">Class</th>
+          <th class="py-4">Month</th>
+          <th class="py-4">Amount</th>
+          <th class="py-4">Status</th>
+          <th class="py-4">Transaction</th>
         </tr>
       </thead>
+
       <tbody>
         {% for p in payments %}
-        <tr class="border-b hover:bg-gray-50">
-          <td class="py-4 font-semibold">{{ p.student.full_name }}</td>
-          <td class="py-4">{{ p.class_schedule.class_name }}</td>
-          <td class="py-4">{{ p.month }}</td>
-          <td class="py-4">Rs. {{ p.amount }}</td>
+        <tr class="border-b border-cream-100 hover:bg-cream-100/50 transition">
+
+          <td class="py-4 font-semibold text-stone-900">
+            {{ p.student.full_name }}
+          </td>
+
+          <td class="py-4 text-stone-600">
+            {{ p.class_schedule.class_name }}
+          </td>
+
+          <td class="py-4 text-stone-600">
+            {{ p.month }}
+          </td>
+
+          <td class="py-4 font-semibold text-stone-900">
+            Rs. {{ p.amount }}
+          </td>
+
           <td class="py-4">
             {% if p.status == "PAID" %}
-              <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold">PAID</span>
+              <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold text-sm">PAID</span>
             {% elif p.status == "PENDING" %}
-              <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-semibold">PENDING</span>
+              <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-semibold text-sm">PENDING</span>
             {% else %}
-              <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full font-semibold">{{ p.status }}</span>
+              <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full font-semibold text-sm">
+                {{ p.status }}
+              </span>
             {% endif %}
           </td>
-          <td class="py-4 text-gray-500">{{ p.khalti_transaction_id|default:"-" }}</td>
+
+          <td class="py-4 text-stone-500 text-sm break-all">
+            {{ p.khalti_transaction_id|default:"-" }}
+          </td>
+
         </tr>
         {% empty %}
-        <tr><td class="py-6 text-center text-gray-500" colspan="6">No payments found.</td></tr>
+        <tr>
+          <td colspan="6" class="py-12 text-center text-stone-500">
+            No payments found.
+          </td>
+        </tr>
         {% endfor %}
       </tbody>
+
     </table>
+
   </div>
 
 </div>
+
+<!-- FOOTER -->
+<footer class="mt-12 border-t border-green-200 bg-green-500">
+  <div class="max-w-7xl mx-auto px-6 py-8 flex justify-between text-white text-sm">
+    <span>Narajyoti Admin Panel</span>
+    <span>Manage · Monitor · Control</span>
+  </div>
+</footer>
+
 </body>
 </html>
