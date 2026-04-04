@@ -1,4 +1,4 @@
-
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,12 +70,12 @@
 
 <!-- NAV -->
 <nav id="navbar" class="fixed top-0 w-full z-50 h-[72px] flex items-center justify-between px-6 md:px-12 transition-all duration-300 bg-cream-100/90 backdrop-blur-md">
-  <a href="#home" class="flex items-center gap-3">
-    <div class="w-10 h-10 bg-green-500 rounded-xl flex items-center justify-center text-lg shrink-0">🎵</div>
-    <div>
-      <div class="font-serif text-xl font-bold text-green-500 leading-none">Narajyoti</div>
-      <div class="text-[10px] font-bold text-stone-400 tracking-[0.15em] uppercase mt-0.5">Music School</div>
-    </div>
+  <a href="/" class="flex items-center gap-3">
+    <img src="{% static 'Logo.png' %}" alt="Narajyoti Logo" class="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-green-500/20">
+  <div>
+    <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
+    <p class="text-[10px] font-bold text-stone-400 tracking-[0.18em] uppercase mt-1">Music School</p>
+  </div>
   </a>
 
   <ul class="hidden md:flex gap-8 list-none m-0 p-0">

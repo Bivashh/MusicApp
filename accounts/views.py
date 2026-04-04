@@ -355,7 +355,7 @@ def create_class(request):
         teacher_id = request.session.get('user_id')
         teacher = Teacher.objects.get(teacher_id=teacher_id)
 
-        # ✅ store the created object in new_class
+        
         new_class = ClassSchedule.objects.create(
             teacher=teacher,
             class_name=class_name,
@@ -638,15 +638,23 @@ def student_assessments(request):
     sid = request.session.get("user_id")
     student = get_object_or_404(Student, student_id=sid)
 
-    # simple: show all assessments 
+    today = timezone.localdate()
+
     assessments = Assessment.objects.all().order_by("-created_at")
 
-    # map submission status
-    submitted_ids = set(Submission.objects.filter(student=student).values_list("assessment_id", flat=True))
+    submitted_ids = set(
+        Submission.objects.filter(student=student).values_list("assessment_id", flat=True)
+    )
+
+    
+    active_assessments = [a for a in assessments if a.deadline >= today]
+    missed_assessments = [a for a in assessments if a.deadline < today and a.assessment_id not in submitted_ids]
 
     return render(request, "student_assessments.html", {
-        "assessments": assessments,
-        "submitted_ids": submitted_ids
+        "today": today,
+        "active_assessments": active_assessments,
+        "missed_assessments": missed_assessments,
+        "submitted_ids": submitted_ids,
     })
 
 
@@ -659,9 +667,21 @@ def student_submit_assessment(request, assessment_id):
 
     a = get_object_or_404(Assessment, assessment_id=assessment_id)
 
+    # ✅ deadline check (date-based)
+    today = timezone.localdate()
+    deadline_passed = today > a.deadline
+
     existing = Submission.objects.filter(assessment=a, student=student).first()
 
     if request.method == "POST":
+        # ✅ block submit/resubmit after deadline
+        if deadline_passed:
+            return render(request, "student_submit_assessment.html", {
+                "a": a,
+                "existing": existing,
+                "error": "Deadline has passed. You cannot submit or re-submit this assessment."
+            })
+
         audio = request.FILES.get("student_audio")
         comment = request.POST.get("comment")
 
@@ -695,7 +715,6 @@ def student_submit_assessment(request, assessment_id):
             # ---- Librosa scoring ----
             try:
                 result = analyze_audio(ref_path, stu_path)
-
                 submission_obj.pitch_score = result["pitch_score"]
                 submission_obj.rhythm_score = result["rhythm_score"]
                 submission_obj.auto_score = result["auto_score"]
@@ -705,7 +724,6 @@ def student_submit_assessment(request, assessment_id):
 
             # ---- Gemini dynamic feedback ----
             try:
-                
                 if submission_obj.auto_score is not None:
                     submission_obj.ai_feedback = generate_gemini_feedback(
                         title=a.title,
@@ -721,19 +739,21 @@ def student_submit_assessment(request, assessment_id):
             try:
                 pitch_rel = generate_pitch_plot(ref_path, stu_path)
                 rhythm_rel = generate_rhythm_plot(ref_path, stu_path)
-
-                # Assign to ImageFields
                 submission_obj.pitch_plot.name = pitch_rel
                 submission_obj.rhythm_plot.name = rhythm_rel
             except Exception as e:
                 print("GRAPH ERROR:", e)
 
-            # Save all updates
             submission_obj.save()
 
         return redirect("/student/assessments/")
 
-    return render(request, "student_submit_assessment.html", {"a": a, "existing": existing})
+    
+    return render(request, "student_submit_assessment.html", {
+        "a": a,
+        "existing": existing,
+        "deadline_passed": deadline_passed
+    })
 
 def student_results(request):
     if request.session.get("role") != "student":
