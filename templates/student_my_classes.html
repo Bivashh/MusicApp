@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Classes</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-stone-50 min-h-screen text-stone-800">
+
+<nav class="bg-white/90 backdrop-blur border-b border-stone-200 sticky top-0 z-40">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
+    <a href="/student/dashboard/" class="font-extrabold text-amber-900">🎵 Narajyoti Student</a>
+    <a href="/student/dashboard/" class="px-4 py-2 rounded-full border hover:border-amber-500 font-semibold">← Back</a>
+  </div>
+</nav>
+
+<div class="max-w-6xl mx-auto px-4 py-10">
+  <h2 class="text-3xl font-extrabold text-stone-900 mb-6">My Joined Classes</h2>
+
+  <div class="grid md:grid-cols-2 gap-6">
+    {% for e in enrollments %}
+      <div class="bg-white rounded-3xl border border-stone-200 shadow-sm p-6">
+        <h3 class="text-2xl font-bold text-stone-900">{{ e.class_schedule.class_name }}</h3>
+        <p class="text-stone-600 mt-2">
+          Teacher: <span class="font-semibold">{{ e.class_schedule.teacher.full_name }}</span>
+        </p>
+        <p class="text-stone-600 mt-1">
+          Date: {{ e.class_schedule.date }} · {{ e.class_schedule.start_time }} - {{ e.class_schedule.end_time }}
+        </p>
+        <p class="text-sm text-stone-400 mt-3">Joined: {{ e.joined_at }}</p>
+      </div>
+    {% empty %}
+      <div class="col-span-full bg-white rounded-3xl border border-stone-200 p-10 text-center text-stone-500">
+        You haven’t joined any class yet.
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+</body>
+</html>

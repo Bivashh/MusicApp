@@ -41,15 +41,15 @@ def analyze_audio(reference_path: str, student_path: str) -> dict:
             "feedback": "Audio too short. Please submit a clearer recording (at least 5–10 seconds).",
         }
 
-    # ---------- PITCH (YIN) ----------
-    # Get pitch contour (Hz). Use a reasonable human vocal range.
+    # ---------- PITCH  ----------
+    # Get pitch contour (Hz). Using a reasonable human vocal range.
     fmin = librosa.note_to_hz("C2")   # ~65 Hz
     fmax = librosa.note_to_hz("C6")   # ~1046 Hz
 
     ref_f0 = librosa.yin(ref_y, fmin=fmin, fmax=fmax, sr=sr)
     stu_f0 = librosa.yin(stu_y, fmin=fmin, fmax=fmax, sr=sr)
 
-    # Convert to cents for better comparison; handle invalid values
+    # Convert to cents for better comparison
     ref_c = librosa.hz_to_midi(ref_f0)
     stu_c = librosa.hz_to_midi(stu_f0)
 
@@ -62,7 +62,7 @@ def analyze_audio(reference_path: str, student_path: str) -> dict:
     pitch_err = np.abs(ref_c - stu_c)
     pitch_err_mean = _safe_mean(pitch_err)
 
-    # Convert error to score (0–100). 0 semitone error => 100.
+    # Converting error to score (0–100). 0 semitone error => 100.
     # ~2 semitones avg error becomes low.
     pitch_score = _clamp(100.0 - (pitch_err_mean * 35.0))
 

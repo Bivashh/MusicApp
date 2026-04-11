@@ -12,6 +12,7 @@ urlpatterns=[
 
     path("panel/student/delete/<int:student_id>/", views.admin_delete_student, name="admin_delete_student"),
     path("panel/teacher/delete/<int:teacher_id>/", views.admin_delete_teacher, name="admin_delete_teacher"),
+    path("panel/payments/verify/<int:payment_id>/", views.panel_verify_payment, name="panel_verify_payment"),
 
     path('register/student/', views.student_register, name='student_register'),
     path('register/teacher/', views.teacher_register, name='teacher_register'),
@@ -41,4 +42,6 @@ urlpatterns=[
     path("verify-otp/", views.verify_otp, name="verify_otp"),
     path("resend-otp/", views.resend_otp, name="resend_otp"),
     path("student/notifications/", views.student_notifications, name="student_notifications"),
+    path("student/join-class/<int:schedule_id>/", views.student_join_class, name="student_join_class"),
+    path("student/my-classes/", views.student_my_classes, name="student_my_classes"),
 ]

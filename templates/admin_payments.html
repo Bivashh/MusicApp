@@ -64,16 +64,26 @@
       <h2 class="text-4xl font-serif text-stone-900">Payments</h2>
     </div>
 
-    <!-- ✅ FIXED BACK BUTTON -->
     <a href="/panel/dashboard/" class="px-5 py-2 rounded-full border border-stone-300 hover:border-green-400 font-semibold">
       ← Back
     </a>
   </div>
+  {% if request.GET.verified %}
+  <div class="mb-6 p-4 rounded-2xl border border-emerald-200 bg-emerald-50 text-emerald-800 font-semibold">
+    ✅ Verification completed. Latest status fetched from Khalti.
+  </div>
+{% endif %}
+
+{% if request.GET.verify_error %}
+  <div class="mb-6 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-800 font-semibold">
+    ❌ Verification failed ({{ request.GET.verify_error }}). Please try again.
+  </div>
+{% endif %}
 
   <!-- TABLE CARD -->
   <div class="bg-white rounded-3xl border border-cream-200 shadow p-6 overflow-x-auto">
 
-    <table class="w-full min-w-[900px]">
+    <table class="w-full min-w-[1000px]">
 
       <thead>
         <tr class="text-left text-stone-500 border-b border-cream-200 text-sm uppercase">
@@ -83,6 +93,7 @@
           <th class="py-4">Amount</th>
           <th class="py-4">Status</th>
           <th class="py-4">Transaction</th>
+          <th class="py-4">Verify</th>
         </tr>
       </thead>
 
@@ -111,6 +122,10 @@
               <span class="px-3 py-1 bg-emerald-100 text-emerald-700 rounded-full font-semibold text-sm">PAID</span>
             {% elif p.status == "PENDING" %}
               <span class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full font-semibold text-sm">PENDING</span>
+            {% elif p.status == "FAILED" %}
+              <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full font-semibold text-sm">FAILED</span>
+            {% elif p.status == "CANCELED" %}
+              <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full font-semibold text-sm">CANCELED</span>
             {% else %}
               <span class="px-3 py-1 bg-gray-200 text-gray-700 rounded-full font-semibold text-sm">
                 {{ p.status }}
@@ -122,10 +137,21 @@
             {{ p.khalti_transaction_id|default:"-" }}
           </td>
 
+          <td class="py-4">
+            {% if p.pidx %}
+              <a href="{% url 'panel_verify_payment' p.payment_id %}"
+                 class="px-4 py-2 rounded-full bg-indigo-600 text-white hover:bg-indigo-700 font-semibold text-sm">
+                Verify
+              </a>
+            {% else %}
+              <span class="text-stone-400 text-sm">-</span>
+            {% endif %}
+          </td>
+
         </tr>
         {% empty %}
         <tr>
-          <td colspan="6" class="py-12 text-center text-stone-500">
+          <td colspan="7" class="py-12 text-center text-stone-500">
             No payments found.
           </td>
         </tr>
@@ -135,6 +161,10 @@
     </table>
 
   </div>
+
+  <p class="mt-4 text-sm text-stone-500">
+    Tip: If a payment shows PENDING/FAILED but the student claims they paid, click <span class="font-semibold">Verify</span> to re-check Khalti status using stored <span class="font-semibold">pidx</span>.
+  </p>
 
 </div>
 

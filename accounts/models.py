@@ -130,3 +130,15 @@ class Notification(models.Model):
 
     def __str__(self):
         return self.title
+    
+class Enrollment(models.Model):
+    enrollment_id = models.AutoField(primary_key=True)
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    class_schedule = models.ForeignKey(ClassSchedule, on_delete=models.CASCADE)
+    joined_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ("student", "class_schedule")
+
+    def __str__(self):
+        return f"{self.student.full_name} -> {self.class_schedule.class_name}"

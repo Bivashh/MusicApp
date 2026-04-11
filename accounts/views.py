@@ -1,7 +1,7 @@
 from django.shortcuts import render,redirect
 from django.contrib.auth import authenticate,login,logout
 from django.contrib import messages
-from .models import Student, Teacher, ClassSchedule, Payment, Assessment, Submission, Notification
+from .models import Student, Teacher, ClassSchedule, Payment, Assessment, Submission, Notification, Enrollment
 import random
 import bcrypt
 import requests
@@ -290,11 +290,17 @@ def student_dashboard(request):
     sid = request.session.get("user_id")
     student = get_object_or_404(Student, student_id=sid)
 
-    classes = ClassSchedule.objects.all()
+    classes = ClassSchedule.objects.all().order_by("-date")
 
-    return render(request, 'student_dashboard.html', {
-        'student': student,
-        'classes': classes
+    
+    joined_ids = set(
+        Enrollment.objects.filter(student=student).values_list("class_schedule_id", flat=True)
+    )
+
+    return render(request, "student_dashboard.html", {
+        "student": student,
+        "classes": classes,
+        "joined_ids": joined_ids
     })
 
 def teacher_dashboard(request):
@@ -391,7 +397,8 @@ def student_payment_new(request):
     sid = request.session.get("user_id")
     student = get_object_or_404(Student, student_id=sid)
 
-    classes = ClassSchedule.objects.all().order_by("-date")
+    joined_ids = Enrollment.objects.filter(student=student).values_list("class_schedule_id", flat=True)
+    classes = ClassSchedule.objects.filter(schedule_id__in=joined_ids).order_by("-date")
 
     if request.method == "POST":
         schedule_id = request.POST.get("schedule_id")
@@ -516,6 +523,7 @@ def khalti_return(request):
 
     payment.save()
     return redirect("/student/payments/")
+
 
 def teacher_assessments(request):
     if request.session.get("role") != "teacher":
@@ -801,4 +809,77 @@ def student_notifications(request):
     return render(request, "student_notifications.html", {
         "notes": notes,
         "unread_count": unread_count
+    })
+
+#Verifying if the payment is successful
+@admin_required
+def panel_verify_payment(request, payment_id):
+    payment = get_object_or_404(Payment, payment_id=payment_id)
+
+    # Must have pidx to verify
+    if not payment.pidx:
+        return redirect("/panel/payments/?verify_error=missing_pidx")
+
+    lookup_url = f"{settings.KHALTI_BASE_URL}/epayment/lookup/"
+    headers = {
+        "Authorization": f"Key {settings.KHALTI_SECRET_KEY}",
+        "Content-Type": "application/json",
+    }
+
+    try:
+        res = requests.post(lookup_url, json={"pidx": payment.pidx}, headers=headers, timeout=30)
+    except Exception as e:
+        print("VERIFY REQUEST ERROR:", e)
+        return redirect("/panel/payments/?verify_error=request_failed")
+
+    if res.status_code != 200:
+        print("VERIFY LOOKUP FAILED:", res.status_code, res.text)
+        return redirect("/panel/payments/?verify_error=lookup_failed")
+
+    info = res.json()
+    final_status = info.get("status")
+    txn = info.get("transaction_id")
+
+    # Update fields based on lookup
+    payment.khalti_transaction_id = txn
+
+    if final_status == "Completed":
+        payment.status = "PAID"
+    elif final_status == "Pending":
+        payment.status = "PENDING"
+    elif final_status == "User canceled":
+        payment.status = "CANCELED"
+    else:
+        payment.status = "FAILED"
+
+    payment.save()
+
+    print("VERIFY OK:", payment.payment_id, "status:", payment.status, "txn:", payment.khalti_transaction_id)
+    return redirect("/panel/payments/?verified=1")
+
+def student_join_class(request, schedule_id):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    cls = get_object_or_404(ClassSchedule, schedule_id=schedule_id)
+
+    # create enrollment if not exists
+    Enrollment.objects.get_or_create(student=student, class_schedule=cls)
+
+    return redirect("/student/dashboard/")
+
+def student_my_classes(request):
+    if request.session.get("role") != "student":
+        return redirect("/login/")
+
+    sid = request.session.get("user_id")
+    student = get_object_or_404(Student, student_id=sid)
+
+    enrollments = Enrollment.objects.filter(student=student).select_related("class_schedule", "class_schedule__teacher").order_by("-joined_at")
+
+    return render(request, "student_my_classes.html", {
+        "enrollments": enrollments
     })

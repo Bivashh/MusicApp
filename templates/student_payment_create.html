@@ -92,6 +92,18 @@
       </div>
     </section>
 
+    {% if error %}
+  <div class="mb-4 p-4 rounded-2xl border border-red-200 bg-red-50 text-red-800 font-semibold">
+    {{ error }}
+  </div>
+{% endif %}
+
+{% if not classes %}
+  <div class="mb-4 p-4 rounded-2xl border border-amber-200 bg-amber-50 text-amber-900 font-semibold">
+    You haven't joined any class yet. Please join a class from the dashboard first.
+  </div>
+{% endif %}
+
     <!-- FORM CARD -->
     <section class="bg-white rounded-[1.75rem] border border-cream-300 shadow-soft overflow-hidden">
       <div class="px-6 md:px-8 py-6 border-b border-cream-200 bg-gradient-to-r from-white to-green-50">
