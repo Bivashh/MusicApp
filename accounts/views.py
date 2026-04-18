@@ -267,6 +267,8 @@ def loginPage(request):
                 return redirect('student_dashboard')
         except:
             pass
+        
+
 
         # check teacher
         try:
@@ -290,7 +292,8 @@ def student_dashboard(request):
     sid = request.session.get("user_id")
     student = get_object_or_404(Student, student_id=sid)
 
-    classes = ClassSchedule.objects.all().order_by("-date")
+    today=timezone.localdate()
+    classes = ClassSchedule.objects.filter(date__gte=today).order_by("date", "start_time")
 
     
     joined_ids = set(
