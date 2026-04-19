@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -44,12 +45,10 @@
   <nav class="sticky top-0 z-40 border-b border-cream-300 bg-cream-100/90 backdrop-blur-md">
     <div class="max-w-7xl mx-auto px-5 md:px-8 py-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-12 h-12 rounded-2xl bg-green-500 text-white flex items-center justify-center text-2xl">
-          🎵
-        </div>
-        <div>
-          <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
-          <p class="text-[10px] font-bold text-stone-400 tracking-[0.18em] uppercase mt-1">Teacher Portal</p>
+        <img src="{% static 'Logo.png' %}" alt="Narajyoti Logo" class="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-green-500/20">
+  <div>
+    <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
+    <p class="text-[10px] font-bold text-stone-400 tracking-[0.18em] uppercase mt-1">Music School</p>
         </div>
       </div>
 

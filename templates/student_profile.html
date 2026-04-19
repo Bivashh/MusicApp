@@ -38,31 +38,47 @@
 <body class="bg-cream-100 min-h-screen text-stone-800 font-sans">
 
   <!-- NAVBAR -->
-  <nav class="sticky top-0 z-40 border-b border-cream-200 bg-cream-100/90 backdrop-blur">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex flex-wrap items-center justify-between gap-4">
+<nav class="sticky top-0 z-40 border-b border-cream-300 bg-cream-100/90 backdrop-blur-md">
+  <div class="max-w-7xl mx-auto px-5 md:px-8 py-4 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 
-      <div class="flex items-center gap-3">
-        <a href="/" class="flex items-center gap-3">
-    <img src="{% static 'Logo.png' %}" alt="Narajyoti Logo" class="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-green-500/20">
-  <div>
-    <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
-    <p class="text-[10px] font-bold text-stone-400 tracking-[0.18em] uppercase mt-1">Music School</p>
-  </div>
-  </a>
-
-      </div>
-
-      <div class="flex flex-wrap gap-3">
-        <a href="/student/dashboard/" class="px-4 py-2 rounded-full border border-cream-300 bg-white hover:border-green-300 hover:text-green-500 transition font-semibold">Dashboard</a>
-        <a href="/student/my-classes/" class="px-4 py-2 rounded-full border border-cream-300 bg-white hover:border-green-300 hover:text-green-500 transition font-semibold">My Classes</a>
-        <a href="/student/assessments/" class="px-4 py-2 rounded-full border border-cream-300 bg-white hover:border-green-300 hover:text-green-500 transition font-semibold">Assessments</a>
-        <a href="/student/results/" class="px-4 py-2 rounded-full border border-cream-300 bg-white hover:border-green-300 hover:text-green-500 transition font-semibold">Results</a>
-        <a href="{% url 'student_payment' %}" class="px-4 py-2 rounded-full bg-green-500 text-white hover:bg-green-400 font-semibold transition shadow">
-          Payments
-        </a>
-      </div>
+    <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-3">
+        <img src="{% static 'Logo.png' %}" alt="Narajyoti Logo" class="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-green-500/20">
+        <div>
+          <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
+          <p class="text-[10px] font-bold text-stone-400 tracking-[0.18em] uppercase mt-1">Music School</p>
+        </div>
+      </a>
     </div>
-  </nav>
+
+    <div class="flex flex-wrap gap-3">
+      <a href="/student/dashboard/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+        Dashboard
+      </a>
+      <a href="/student/profile/" class="px-4 py-2.5 rounded-full bg-green-500 text-white hover:bg-green-400 font-semibold transition-all shadow-lg shadow-green-500/20">
+        My Profile
+      </a>
+      <a href="/student/my-classes/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+        My Classes
+      </a>
+      <a href="/student/assessments/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+        Assessments
+      </a>
+      <a href="/student/results/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+        Results
+      </a>
+      <a href="{% url 'student_payment' %}" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+        Payments
+      </a>
+      <a href="/student/notifications/" class="px-4 py-2.5 rounded-full border border-cream-300 bg-white text-stone-700 hover:border-green-300 hover:text-green-500 hover:bg-green-50 font-semibold transition-all">
+        Notifications
+      </a>
+      <a href="/logout/" class="px-4 py-2.5 rounded-full bg-amber-800 text-white hover:bg-amber-900 font-semibold transition-all">
+        Logout
+      </a>
+    </div>
+  </div>
+</nav>
 
   <div class="max-w-7xl mx-auto px-6 py-10 space-y-8">
 

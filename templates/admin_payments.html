@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -38,9 +39,9 @@
   <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
 
     <a href="/panel/dashboard/" class="flex items-center gap-3">
-      <div class="w-11 h-11 rounded-xl bg-green-500 text-white flex items-center justify-center text-xl">🛡️</div>
-      <div>
-        <p class="font-serif text-xl text-green-500">Narajyoti</p>
+       <img src="{% static 'Logo.png' %}" alt="Narajyoti Logo" class="w-12 h-12 rounded-2xl object-cover shadow-lg shadow-green-500/20">
+  <div>
+    <p class="font-serif text-2xl text-green-500 leading-none">Narajyoti</p>
         <p class="text-xs text-gray-400 font-bold uppercase">Admin</p>
       </div>
     </a>
@@ -49,6 +50,7 @@
       <a href="/panel/dashboard/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Dashboard</a>
       <a href="/panel/students/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Students</a>
       <a href="/panel/teachers/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Teachers</a>
+      <a href="/panel/payments/" class="px-4 py-2 rounded-full border hover:border-green-400 font-semibold">Payments</a>
       <a href="/panel/logout/" class="px-4 py-2 bg-black text-white rounded-full font-semibold">Logout</a>
     </div>
 
